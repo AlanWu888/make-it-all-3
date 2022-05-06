@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const { ROLE, users } = require('./data')
 const { authUser, authRole } = require('./basicAuth')
-
+ 
 app.set('view engine', 'ejs')   // set view engine
 
 app.use(express.json())
