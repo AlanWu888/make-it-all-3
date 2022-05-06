@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Make-It-All: Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="stylesheet.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<br><br><br>
+<body>
+    <%= if (messages.error) { %>
+        <%= messages.error %>  
+    <%= } %> 
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="mb-3">
+                    <img src="../assets/logo.png" width="40" height="40" class="float-left"> 
+                    <h3> &ensp;Login </h3>
+                </div>
+                <form class="shadow p-4" action="#">                  
+                    <div class="mb-3">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+                    </div>
+    
+                    <div class="mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                    </div>
+    
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-block btn-warning">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>      
+</body>    
+</html>

@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
+		<link rel="stylesheet" href="css/admin.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+		<title>Manage Users</title>
+	</head>
+	<body>
+		<script>
+			function searchUser() {
+				// This searches for user based on what is in the search box
+				searchFilter = document.getElementById("myFilter");
+				
+				var input, filter, table, tr, td, i, txtValue;
+				input = document.getElementById("myInput");
+				filter = input.value.toUpperCase();
+				table = document.getElementById("myTable");
+				tr = table.getElementsByTagName("tr");
+			
+				// Loop through all table rows, and hide those who don't match the search query
+				for (i = 0; i < tr.length; i++) {
+					td = tr[i].getElementsByTagName("td")[searchFilter.value];
+					if (td) {
+						txtValue = td.textContent || td.innerText;
+						if (txtValue.toUpperCase().indexOf(filter) > -1) {
+							tr[i].style.display = "";
+						} else {
+							tr[i].style.display = "none";
+						}
+					}
+				}
+			}
+			
+			function submit() {
+				// original author: Jordan, adapted by Alan
+				// closes modal and adds problem to table
+				$(document).ready(function() {
+					$('#addnewuser').modal('hide');  // close modal
+					
+					const userTypes = ["Operator", "Specialist"];
+					const specialities = ["N/A", "Software", "Hardware", "Network"];
+					const contractTypes = ["Permanent", "Temporary"];
+					
+					var userID = $('#userID-number').val(); // store input values
+					var name = $('#username').val();
+					var userType = userTypes[$('#user-type').val()];
+					var speciality = specialities[$('#spec-type').val()];
+					var contract = contractTypes[$('#contract-type').val()];
+
+					var today = new Date(); // date formatting
+					var dd = today.getDate();
+					var mm = today.getMonth()+1;
+					var yyyy = today.getFullYear();
+					if (dd < 10)
+						dd = '0' + dd;
+					if (mm < 10)
+						mm = '0' + mm;
+					today = dd + '/' + mm + '/' + yyyy;
+
+					var newRow = "<tr><td>" + userID + // create row from inputs
+								"</td><td>" + name +
+								"</td><td>" + userType +
+								"</td><td>" + speciality +
+								"</td><td>" + contract +
+								"</td><td>" + today +
+								"</td><td><button class=\"btn btn-secondary btn-sm\">Manage</button></td></tr>";
+					$('#myTable').append(newRow);
+				})
+			}
+			
+			function getDate() {
+				// original author: Jordan, adapted by Alan
+				// gets current date with custom format: MMM D YYYY, HH:MM
+				$(document).ready(function () {
+					var year = new Date().getFullYear().toString();
+					var month = new Date().getMonth().toString();
+					var day = new Date().getDate().toString();
+					if (day < 10)
+						day = '0' + day;
+					if (month < 10)
+						month = '0' + month;
+					var today = day + "/" + month + "/" + year;
+					$("#call-date").val(today);
+				})
+			}
+			
+		</script>
+		<!-- Nav Bar -->
+		<nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+			<a class="navbar-brand" href="landing.html"><img src="logo.png" width="40" height="40"></a>
+			<h5><b>make-it-all</b></h5>
+			<ul class="nav navbar-nav mx-auto">
+				<li class="nav-item">
+					<select class="form-control form-control" id="myFilter" onclick="searchUser()">
+						<option value="0">User ID</option>
+						<option value="1">User Name</option>
+						<option value="2">User Type</option>
+						<option value="3">Speciality</option>
+						<option value="4">Contract Type</option>
+						<option value="5">Start Date</option>
+					</select>
+				</li>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control ml-sm-2" type="search" placeholder="Search" aria-label="Search" id="myInput" onkeyup="searchUser()">
+				</form>
+			</ul>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="index.html">Log out</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- Filter Container-->
+		<div class="container-fluid">
+		<div class="row">
+		
+		<!-- Data Container -->
+		<div class="col-md-12 bottom">
+			<!-- Nav Bar -->
+			<nav class="navbar navbar-expand-lg navbar-light tableOptions">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<b>Manage users</b>
+					</li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#addnewuser">+ Add new</button>
+					</li>
+					<li class="nav-item">
+						<button type="button" class="btn btn-secondary btn-sm"><i class="bi bi-filter"></i>Sort By</button>
+					</li>
+				</ul>
+			</nav>
+			
+			<!-- Table of Users -->
+			<div class ="scrollTable scroll">
+				<table class="table table-hover dataTable" id="myTable">
+					<thead>
+						<tr>
+							<th scope="col">User ID</th>
+							<th scope="col">User Name</th>
+							<!-- <th scope="col">Software Type</th>
+								<th scope="col">Hardware Type</th> -->
+							<th scope="col">User Type</th>
+							<th scope="col">Speciality</th>
+							<th scope="col">Contract Type</th>
+							<th scope="col">Start Date</th>
+							<th scope="col"> </th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>Alice</td>
+							<td>Operator</td>
+							<td>N/A</td>
+							<td>Permanent</td>
+							<td>01/01/1970</td>
+							<td><a data-toggle="modal" data-target="#AliceModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>Clara</td>
+							<td>Specialist</td>
+							<td>Software</td>
+							<td>Permanent</td>
+							<td>01/01/1970</td>
+							<td><a data-toggle="modal" data-target="#ClaraModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>Bert</td>
+							<td>Specialist</td>
+							<td>Hardware</td>
+							<td>Permanent</td>
+							<td>01/01/1970</td>
+							<td><a data-toggle="modal" data-target="#BertModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>Nick</td>
+							<td>Specialist</td>
+							<td>Network</td>
+							<td>Permanent</td>
+							<td>01/01/1970</td>
+							<td><a data-toggle="modal" data-target="#NickModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Modal For Alice Info -->
+			<div class="modal fade problemInfo" id="AliceModal" tabindex="-1" role="dialog" aria-labelledby="AliceModal" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">User 1 - Alice</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<ul>
+								<li><b>User ID:</b> 1</li>
+								<li><b>User Name:</b> Alice</li>
+								<li><b>User Type:</b> Operator</li>
+								<li><b>Speciality:</b> N/A</li>
+								<li><b>Contract Type:</b> Permanent</li>
+								<li><b>Start Type:</b> 01/01/1970</li>
+							</ul>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">Edit User</button>
+							<button type="button" class="btn btn-primary">Remove User</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal For Clara Info -->
+			<div class="modal fade problemInfo" id="ClaraModal" tabindex="-1" role="dialog" aria-labelledby="ClaraModal" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">User 2 - Clara</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<ul>
+								<li><b>User ID:</b> 2</li>
+								<li><b>User Name:</b> Clara</li>
+								<li><b>User Type:</b> Specialist</li>
+								<li><b>Speciality:</b> Software</li>
+								<li><b>Contract Type:</b> Permanent</li>
+								<li><b>Start Type:</b> 01/01/1970</li>
+							</ul>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">Edit User</button>
+							<button type="button" class="btn btn-primary">Remove User</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal For Bert Info -->
+			<div class="modal fade problemInfo" id="BertModal" tabindex="-1" role="dialog" aria-labelledby="BertModal" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">User 3 - Bert</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<ul>
+								<li><b>User ID:</b> 3</li>
+								<li><b>User Name:</b> Bert</li>
+								<li><b>User Type:</b> Specialist</li>
+								<li><b>Speciality:</b> Hardware</li>
+								<li><b>Contract Type:</b> Permanent</li>
+								<li><b>Start Type:</b> 01/01/1970</li>
+							</ul>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">Edit User</button>
+							<button type="button" class="btn btn-primary">Remove User</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal For Nick Info -->
+			<div class="modal fade problemInfo" id="NickModal" tabindex="-1" role="dialog" aria-labelledby="NickModal" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">User 4 - Nick</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<ul>
+								<li><b>User ID:</b> 4</li>
+								<li><b>User Name:</b> Nick</li>
+								<li><b>User Type:</b> Specialist</li>
+								<li><b>Speciality:</b> Network</li>
+								<li><b>Contract Type:</b> Permanent</li>
+								<li><b>Start Type:</b> 01/01/1970</li>
+							</ul>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">Edit User</button>
+							<button type="button" class="btn btn-primary">Remove User</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal for Adding a new problem -->
+			<div class="modal fade" id="addnewuser" tabindex="-1" role="dialog" aria-labelledby="lbl_newUserModal"
+				aria-hidden="true">
+				<!-- modal container -->
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header bg-warning">
+							<h5 class="modal-title" id="lbl_newUserModal">Add New User</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="parent-container d-flex  w-100 bg-light" id="parent">
+									<div class="container w-50 " id="inputproblem">
+										<!-- User ID field -->
+										<div class="row">
+											<div class="col-sm ">
+												<div class="input-group mb-3">
+													<div class="input-group-prepend">
+														<span class="input-group-text" id="basic-addon1">User ID</span>
+													</div>
+													<input type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" value="5" disabled>
+												</div>
+											</div>
+										</div>
+										<!-- user name field -->
+										<div class="row">
+											<div class="col-sm ">
+												<div class="input-group mb-3">
+													<div class="input-group-prepend">
+														<span class="input-group-text">User Name</span>
+													</div>
+													<input type="text" id="username" aria-label="First name" class="form-control">
+												</div>
+											</div>
+										</div>
+										
+										<div class="row">
+											<!-- User type field -->
+											<div class="col-4 mb-3 ">
+												<select class="form-control form-control" id="user-type">
+													<option value="0">Operator</option>
+													<option value="1">Specialist</option>
+												</select>
+											</div>
+											<!-- Speciality field -->
+											<div class="col-4 mb-3 ">
+												<select class="form-control form-control" id="spec-type">
+													<option value="0">N/A</option>
+													<option value="1">Software</option>
+													<option value="2">Hardware</option>
+													<option value="3">Network</option>
+												</select>
+											</div>
+											<!-- Contract type field -->
+											<div class="col-4 mb-3 ">
+												<select class="form-control form-control" id="contract-type">
+													<option value="0">Permanent</option>
+													<option value="1">Temporary</option>
+												</select>
+											</div>
+										</div>
+
+										<!-- Submit button -->
+										<div class="row">
+											<!-- change to sumbit type-->
+											<button type="button" class="btn btn-primary m-3" onclick="submit()">Add User</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</body>
+</html>

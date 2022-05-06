@@ -1,0 +1,39 @@
+.testimonial-group > .row {
+  /* Horizontal scrolling */
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.testimonial-group > .row > .col-10, .col-md-7, .col-lg-4{
+  display: inline-block;
+}
+
+.testimonial-card {
+	height: 500px;
+	margin-bottom: 20px;
+}
+
+.badge {
+	font-size: 1.1em;
+}
+
+/* Put horizontal scrollbar at the top of the cards */
+.Flipped,
+.Flipped .testimonial-card{	
+	transform: rotateX(180deg);
+}
+
+.unseen {
+	display: none;
+}
+
+.btn-dropup {
+	/* Style dropup menu to match the other buttons */
+	color: #000000;
+	background-color: #EFEFEF;
+}
+
+.modal-header ul {
+	list-style-type: none;
+	padding: 0;
+}
