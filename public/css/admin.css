@@ -4,6 +4,11 @@ body{
     background-attachment: fixed;
 }
 
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
 .top {
     background-color: white;
 }

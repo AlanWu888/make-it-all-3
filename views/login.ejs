@@ -9,14 +9,12 @@
 
 <br><br><br>
 <body>
-    <%= if (messages.error) { %>
-        <%= messages.error %>  
-    <%= } %> 
+    <div id='status' class='invisible'><%= errormessage %></div>
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <div class="mb-3">
-                    <img src="../assets/logo.png" width="40" height="40" class="float-left"> 
+                    <img src="assets/logo.png" width="40" height="40" class="float-left"> 
                     <h3> &ensp;Login </h3>
                 </div>
                 <form class="shadow p-4" action="/auth" method="post">                  
@@ -37,5 +35,10 @@
             </div>
         </div>
     </div>      
-</body>    
+</body>  
+<script>
+    if($('div#status').text()!='') {
+        alert($('div#status').text());
+    }
+</script>  
 </html>

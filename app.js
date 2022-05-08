@@ -27,7 +27,18 @@ app.use(express.static("public"))
 app.get('/', (req, res) => {
 	// Render login template
 	res.sendFile(path.join(__dirname + '/login.html'))
-});
+})
+
+// http://localhost:3000/login
+app.get('/login', (req, res) => {
+	// Render login template
+	//res.sendFile(path.join(__dirname + '/login.html'))
+	res.sendFile(path.join(__dirname + '/login.html'))
+})
+
+app.get('/auth', (req, res) => {
+	res.render('login', { errormessage: 'Something went wrong please try again' })
+})
 
 // http://localhost:3000/auth
 app.post('/auth', (req, res) => {
@@ -51,18 +62,20 @@ app.post('/auth', (req, res) => {
                     res.render('admin')
                 }
                 if(usertype === 'employee') {
-                    res.render('selfhelp')
+                    res.render('selfhelp', { name: username })
                 }
                 if(usertype === 'specialist') {
-                    res.render('specialist')
+                    res.render('specialist', { name: username })
                 }
 			} else {
-				res.send('Incorrect Username and/or Password!')
+				res.render('login', { errormessage: 'Incorrect Username and/or Password!'})
+				// res.send('Incorrect Username and/or Password!')
 			}			
 			res.end();
 		});
 	} else {
-		res.send('Please enter Username and Password!')
+		res.render('login', { errormessage: 'Please enter Username and Password!'})
+		// res.send('Please enter Username and Password!')
 		res.end();
 	}
 });
