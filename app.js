@@ -56,7 +56,7 @@ app.post('/auth', (req, res) => {
 				}
 				if (usertype === 'employee') {
 					// app.get('selfhelp' , { name: username })
-					var sql_cases = "SELECT case_id, date_opened, status_code, software_name, hardware_make_name, model_name, problem_title, solution FROM Cases as c INNER JOIN Problem as prob ON c.problem_id=prob.problem_id INNER JOIN HardwareModels as models ON c.hardware_id=models.model_id INNER JOIN HardwareMake as make ON models.make_id=make.hardware_make_id INNER JOIN Software as soft ON c.software_id=soft.software_id INNER JOIN Solutions as solu ON prob.problem_id=solu.problem_id"
+					var sql_cases = "SELECT case_id, user_id, date_opened, status_code, software_name, hardware_make_name, model_name, problem_title, solution FROM Cases as c INNER JOIN Problem as prob ON c.problem_id=prob.problem_id INNER JOIN HardwareModels as models ON c.hardware_id=models.model_id INNER JOIN HardwareMake as make ON models.make_id=make.hardware_make_id INNER JOIN Software as soft ON c.software_id=soft.software_id INNER JOIN Solutions as solu ON prob.problem_id=solu.problem_id"
 					connection.query(sql_cases, function (err_cases, cases_data, fields_cases) {
 						if (err_cases) throw err_cases
 						console.log(cases_data)

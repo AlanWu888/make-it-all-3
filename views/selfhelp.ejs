@@ -161,7 +161,7 @@
 										<a class="dropdown-item" href="#">Solution did not work</a>
 									</div>
 								</div>
-								<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
+								<button type="button" class="btn" data-toggle="modal" data-target="#modal<%= i.toString() %>" >
 									Expand
 								</button>
 							</div>
@@ -262,34 +262,41 @@
 		</div>
 
 		<!-- card 1 modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-			aria-hidden="true">
+		<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
+		<div class="modal fade" id="modal<%= i.toString() %>" tabindex="-1" role="dialog" aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 				<div class="modal-content">
 					<!-- modal header -->
 					<div class="modal-header">
 						<ul>
 							<li>
-								<h5 class="modal-title" id="exampleModalLabel">Case 1</h5>
+								<h5 class="modal-title" id="modal<%= i.toString() %>Label">Case <%=data.case_id%></h5>
 							</li>
 							<li>
-								<p class="modal-title">Date Opened: 02/04/2021</p>
+								<p class="modal-title">Date submitted: <%=data.date_opened%></p>
 							</li>
 						</ul>
-						<span class="badge badge-dark">Closed</span>
+						<%if(data.status_code==='Closed'){%>
+							<span class="badge badge-dark">Closed</span>
+						<%}%>
+						<%if(data.status_code==='Pending' ){%>
+							<span class="badge badge-success">Pending</span>
+						<%}%>
+						<%if(data.status_code==='Assigned' ){%>
+							<span class="badge badge-warning">Assigned</span>
+						<%}%>
 					</div>
 					<!-- modal body -->
 					<div class="modal-body">
 						<ul>
-							<li><b>Caller Name:</b> {SYSTEM GENERATED FROM DB}</li>
-							<li><b>Software type:</b> MacOS</li>
-							<li><b>Hardware type:</b> MacBook</li>
-							<li><b>Problem description:</b> Screen switches off randomly.</li>
+							<li><b>Hardware Model:</b><%=data.hardware_make_name%></li>
+							<li><b>Hardware Make:</b><%=data.model_name%></li>
+							<li><b>Software type:</b><%=data.software_name%></li>	
+							<li><b>Problem description:</b><%=data.problem_title%></li>
 						</ul>
 						<hr>
 						<b>Solution offered: </b>
-						<p>Praeterea iter est quasdam res quas ex communi.Praeterea iter est quasdam res quas ex
-							communi.Praeterea iter est quasdam res quas ex communi.</p>
+						<p><%=data.solution%></p>
 						<hr>
 						<h5>Notes</h5>
 						<br>
@@ -309,7 +316,7 @@
 				</div>
 			</div>
 		</div>
-
+		<% i++; })} %>
 	</div> <!-- container modal -->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
