@@ -29,8 +29,23 @@
 				$("#div_unseenProblem").hide();
 			}
 		});
+
+		$("#myInput").on("keyup", function () {
+			var input = $(this).val().toUpperCase();
+			console.log("input: " + input);
+			$(".card").each(function () {
+				if ($(this).data("string").toString().toUpperCase().indexOf(input) < 0) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			})
+		});
 	});
+
+
 </script>
+
 <body>
 	<nav class="navbar justify-content-between navbar-dark bg-dark">
 		<!-- Logo -->
@@ -62,7 +77,7 @@
 		<div class="row">
 			<div class="col-md-7">
 				<form class="form-inline my-2 my-lg-0">
-					<select class="form-control my-2 my-lg-0" id="myFilter" onclick="searchProblem()">
+					<select class="form-control my-2 my-lg-0" id="myFilter">
 						<!-- add js function to allow for search -->
 						<option value="0">Case ID</option>
 						<option value="1">Date</option>
@@ -70,7 +85,7 @@
 						<option value="3">Problem title</option>
 					</select>
 					<input class="form-control ml-sm-2" type="search" placeholder="Search" aria-label="Search"
-						id="myInput" onkeyup="searchProblem()"> <!-- add js function to allow for search -->
+						id="myInput"> <!-- add js function to allow for search -->
 				</form>
 			</div>
 			<div class="col-md-4 mb-3 my-2 my-lg-0">
@@ -101,11 +116,11 @@
 				<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
 					<div class="col-10 col-md-7 col-lg-4">
 						<!-- card 1 -->
-						<div class="card testimonial-card">
+						<div class="card testimonial-card" data-string="<%=data.case_id%>">
 							<!-- card header -->
 							<div class="card-header">
 								<div class="row">
-									<div class="col-6">
+									<div class="col-6" id="searchable">
 										Case <%=data.case_id%>
 									</div>
 									<div class="col-6 text-right">
@@ -117,13 +132,13 @@
 										-->
 										<%if(data.status_code==='Closed'){%>
 											<span class="badge badge-dark">Closed</span>
-										<%}%>
-										<%if(data.status_code==='Pending' ){%>
-											<span class="badge badge-success">Pending</span>
-										<%}%>
-										<%if(data.status_code==='Assigned' ){%>
-											<span class="badge badge-warning">Assigned</span>
-										<%}%>
+											<%}%>
+												<%if(data.status_code==='Pending' ){%>
+													<span class="badge badge-success">Pending</span>
+													<%}%>
+														<%if(data.status_code==='Assigned' ){%>
+															<span class="badge badge-warning">Assigned</span>
+															<%}%>
 									</div>
 								</div>
 								<div class="row">
@@ -134,17 +149,25 @@
 							</div>
 							<!-- card body -->
 							<div class="card-body">
-								<h5 class="text-truncate card-title"><%=data.problem_title%></h5>
+								<h5 class="text-truncate card-title">
+									<%=data.problem_title%>
+								</h5>
 								<ul class="no-list-style">
-									<li><%=data.hardware_make_name%></li>
-									<li><%=data.model_name%></li>
-									<li><%=data.software_name%></li>
+									<li>
+										<%=data.hardware_make_name%>
+									</li>
+									<li>
+										<%=data.model_name%>
+									</li>
+									<li>
+										<%=data.software_name%>
+									</li>
 								</ul>
 								<hr>
 								<!-- solution fix here -->
 								<b>Solution offered</b>
 								<div class="col text-truncate">
-									<%= data.solution %> 
+									<%= data.solution %>
 								</div>
 							</div>
 							<!-- card footer -->
@@ -161,7 +184,8 @@
 										<a class="dropdown-item" href="#">Solution did not work</a>
 									</div>
 								</div>
-								<button type="button" class="btn" data-toggle="modal" data-target="#modal<%= i.toString() %>" >
+								<button type="button" class="btn" data-toggle="modal"
+									data-target="#modal<%= i.toString() %>">
 									Expand
 								</button>
 							</div>
@@ -261,62 +285,76 @@
 			</div>
 		</div>
 
-		<!-- card 1 modal -->
+		<!-- card n modal generation code -->
 		<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
-		<div class="modal fade" id="modal<%= i.toString() %>" tabindex="-1" role="dialog" aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-				<div class="modal-content">
-					<!-- modal header -->
-					<div class="modal-header">
-						<ul>
-							<li>
-								<h5 class="modal-title" id="modal<%= i.toString() %>Label">Case <%=data.case_id%></h5>
-							</li>
-							<li>
-								<p class="modal-title">Date submitted: <%=data.date_opened%></p>
-							</li>
-						</ul>
-						<%if(data.status_code==='Closed'){%>
-							<span class="badge badge-dark">Closed</span>
-						<%}%>
-						<%if(data.status_code==='Pending' ){%>
-							<span class="badge badge-success">Pending</span>
-						<%}%>
-						<%if(data.status_code==='Assigned' ){%>
-							<span class="badge badge-warning">Assigned</span>
-						<%}%>
-					</div>
-					<!-- modal body -->
-					<div class="modal-body">
-						<ul>
-							<li><b>Hardware Model:</b><%=data.hardware_make_name%></li>
-							<li><b>Hardware Make:</b><%=data.model_name%></li>
-							<li><b>Software type:</b><%=data.software_name%></li>	
-							<li><b>Problem description:</b><%=data.problem_title%></li>
-						</ul>
-						<hr>
-						<b>Solution offered: </b>
-						<p><%=data.solution%></p>
-						<hr>
-						<h5>Notes</h5>
-						<br>
-						<button class="btn" type="button" data-toggle="collapse" data-target="#collapseNoteInput"
-							aria-expanded="false" aria-controls="collapseFilters">
-							+ Add Notes
-						</button>
-						<div class="collapse" id="collapseNoteInput">
-							<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+			<div class="modal fade" id="modal<%= i.toString() %>" tabindex="-1" role="dialog"
+				aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<!-- modal header -->
+						<div class="modal-header">
+							<ul>
+								<li>
+									<h5 class="modal-title" id="modal<%= i.toString() %>Label">Case <%=data.case_id%>
+									</h5>
+								</li>
+								<li>
+									<p class="modal-title">Date submitted: <%=data.date_opened%>
+									</p>
+								</li>
+							</ul>
+							<%if(data.status_code==='Closed'){%>
+								<span class="badge badge-dark">Closed</span>
+								<%}%>
+									<%if(data.status_code==='Pending' ){%>
+										<span class="badge badge-success">Pending</span>
+										<%}%>
+											<%if(data.status_code==='Assigned' ){%>
+												<span class="badge badge-warning">Assigned</span>
+												<%}%>
 						</div>
-					</div>
-					<!-- modal footer -->
-					<div class="modal-footer">
-						<button type="button" class="btn">Submit</button>
-						<button type="button" class="btn" data-dismiss="modal">Close</button>
+						<!-- modal body -->
+						<div class="modal-body">
+							<ul>
+								<li><b>Hardware Model:</b>
+									<%=data.hardware_make_name%>
+								</li>
+								<li><b>Hardware Make:</b>
+									<%=data.model_name%>
+								</li>
+								<li><b>Software type:</b>
+									<%=data.software_name%>
+								</li>
+								<li><b>Problem description:</b>
+									<%=data.problem_title%>
+								</li>
+							</ul>
+							<hr>
+							<b>Solution offered: </b>
+							<p>
+								<%=data.solution%>
+							</p>
+							<hr>
+							<h5>Notes</h5>
+							<br>
+							<!-- [TODO] Add notes ability -->
+							<button class="btn" type="button" data-toggle="collapse" data-target="#collapseNoteInput"
+								aria-expanded="false" aria-controls="collapseFilters">
+								+ Add Notes
+							</button>
+							<div class="collapse" id="collapseNoteInput">
+								<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+							</div>
+						</div>
+						<!-- modal footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn">Submit</button>
+							<button type="button" class="btn" data-dismiss="modal">Close</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<% i++; })} %>
+			<% i++; })} %>
 	</div> <!-- container modal -->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
