@@ -34,7 +34,7 @@
 			var input = $(this).val().toUpperCase();
 			console.log("input: " + input);
 			$(".card").each(function () {
-				if ($(this).data("string").toString().toUpperCase().indexOf(input) < 0) {
+				if ($(this).data("values").toString().toUpperCase().indexOf(input) < 0) {
 					$(this).hide();
 				} else {
 					$(this).show();
@@ -77,15 +77,8 @@
 		<div class="row">
 			<div class="col-md-7">
 				<form class="form-inline my-2 my-lg-0">
-					<select class="form-control my-2 my-lg-0" id="myFilter">
-						<!-- add js function to allow for search -->
-						<option value="0">Case ID</option>
-						<option value="1">Date</option>
-						<option value="2">Case Status</option>
-						<option value="3">Problem title</option>
-					</select>
 					<input class="form-control ml-sm-2" type="search" placeholder="Search" aria-label="Search"
-						id="myInput"> <!-- add js function to allow for search -->
+						id="myInput">
 				</form>
 			</div>
 			<div class="col-md-4 mb-3 my-2 my-lg-0">
@@ -116,7 +109,8 @@
 				<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
 					<div class="col-10 col-md-7 col-lg-4">
 						<!-- card 1 -->
-						<div class="card testimonial-card" data-string="<%=data.case_id%>">
+						<div class="card testimonial-card" 
+						data-values="Case <%=data.case_id + data.status_code + data.date_opened + data.problem_title + data.hardware_make_name + data.model_name + data.software_name %>">
 							<!-- card header -->
 							<div class="card-header">
 								<div class="row">
