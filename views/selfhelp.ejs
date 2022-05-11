@@ -22,6 +22,8 @@
 </head>
 <script>
 	$(document).ready(function () {
+		// Toggle own problem title based off Problem description dropdown in new problem modal
+		// Author : Alan
 		$('#selectDescription').on('change', function () {
 			if (this.value == '999') {
 				$("#div_unseenProblem").show();
@@ -30,6 +32,8 @@
 			}
 		});
 
+		// search filter functionality
+		// Author : Alan
 		$("#myInput").on("keyup", function () {
 			var input = $(this).val().toUpperCase();
 			console.log("input: " + input);
@@ -43,7 +47,10 @@
 		});
 	});
 
-
+	function submitTicket() {
+		// Send ticket to specialist, will refresh the page too
+		// Author : Alan
+	}
 </script>
 
 <body>
@@ -106,7 +113,7 @@
 		<div class="testimonial-group mb-5">
 			<div class="row Flipped">
 				<!-- card generation code-->
-				<% if(userData.length!=0){ var i=0; userData.reverse().forEach(function(data){ %>
+				<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
 					<div class="col-10 col-md-7 col-lg-4">
 						<!-- card 1 -->
 						<div class="card testimonial-card" 
@@ -222,42 +229,42 @@
 						<form>
 							<div class="form-group">
 								<label for="selectMake">Make</label>
-								<select class="form-control" id="selectMake" onclick="getMakes()">
-									<!-- add js function to allow for search -->
+								<select class="form-control" id="selectMake">
 									<option value="0">Choose...</option>
-									<option value="1">Apple</option>
-									<option value="2">Asus</option>
-									<option value="3">Dell</option>
+									<!-- add js function to allow for search -->
+									<% if(makes.length!=0){ var i=1; makes.forEach(function(make_data){ %>
+										<option value="<%= i %>"><%= make_data.hardware_make_name.toString() %></option>
+										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Model</label>
-								<select class="form-control" id="selectModel" onclick="getModels()">
+								<select class="form-control" id="selectModel">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
-									<option value="1">Macbook Pro</option>
-									<option value="2">Macbook Air</option>
-									<option value="3">XPS</option>
+									<% if(models.length!=0){ var i=1; models.forEach(function(models_data){ %>
+										<option value="<%= i %>"><%= models_data.model_name.toString() %></option>
+										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Software type</label>
-								<select class="form-control" id="selectSoftware" onclick="getSoftware()">
+								<select class="form-control" id="selectSoftware">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
-									<option value="1">Microsoft Office</option>
-									<option value="2">Windows 10</option>
-									<option value="3">MacOs</option>
+									<% if(soft.length!=0){ var i=1; soft.forEach(function(soft_data){ %>
+										<option value="<%= i %>"><%= soft_data.software_name.toString() %></option>
+										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Problem Description</label>
-								<select class="form-control" id="selectDescription" onclick="getProblems();">
+								<select class="form-control" id="selectDescription">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
-									<option value="1">WiFi not connecting</option>
-									<option value="2">Office is stuck on loading screen</option>
-									<option value="3">Computer not turning on</option>
+									<% if(desc.length!=0){ var i=1; desc.forEach(function(desc_data){ %>
+										<option value="<%= i %>"><%= desc_data.problem_title.toString() %></option>
+										<% i++; })} %>
 									<option value="999">My problem is not listed</option>
 								</select>
 							</div>
@@ -273,7 +280,7 @@
 					<!-- footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Submit ticket</button>
+						<button type="button" class="btn btn-primary" onclick="submitTicket()">Submit ticket</button>
 					</div>
 				</div>
 			</div>
