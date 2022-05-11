@@ -156,6 +156,17 @@
 						</tr>
 					</thead>
 					<tbody>
+						<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
+							<tr>
+								<td><%=data.employee_id%></td>
+								<td><%=data.firstname%></td>
+								<td><%=data.surname%></td>
+								<td><%=data.speciality%></td>
+								<td><%=data.contract_type%></td>
+								<td><%=data.start_date%></td>
+								<td><a data-toggle="modal" data-target="#AliceModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+							</tr>
+						<% i++; })} %>	
 						<tr>
 							<td>1</td>
 							<td>Alice</td>
@@ -197,7 +208,8 @@
 			</div>
 			
 			<!-- Modal For Alice Info -->
-			<div class="modal fade problemInfo" id="AliceModal" tabindex="-1" role="dialog" aria-labelledby="AliceModal" aria-hidden="true">
+			<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
+			<div class="modal fade problemInfo" id="<% "modal" + i.toString() %>" tabindex="-1" role="dialog" aria-labelledby="<% "modal" + i.toString() + "Label" %>" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -208,12 +220,12 @@
 						</div>
 						<div class="modal-body">
 							<ul>
-								<li><b>User ID:</b> 1</li>
-								<li><b>User Name:</b> Alice</li>
-								<li><b>User Type:</b> Operator</li>
-								<li><b>Speciality:</b> N/A</li>
-								<li><b>Contract Type:</b> Permanent</li>
-								<li><b>Start Type:</b> 01/01/1970</li>
+								<li><b>User ID:</b><%=data.employee_id%></li>
+								<li><b>User Name:</b><%=data.firstname%></li>
+								<li><b>User Type:</b><%=data.surname%></li>
+								<li><b>Speciality:</b><%=data.speciality%></li>
+								<li><b>Contract Type:</b><%=data.contract_type%></li>
+								<li><b>Start Type:</b><%=data.start_date%></li>
 							</ul>
 						</div>
 						<div class="modal-footer">
@@ -223,6 +235,7 @@
 					</div>
 				</div>
 			</div>
+			<% i++; })} %>
 			
 			<!-- Modal For Clara Info -->
 			<div class="modal fade problemInfo" id="ClaraModal" tabindex="-1" role="dialog" aria-labelledby="ClaraModal" aria-hidden="true">

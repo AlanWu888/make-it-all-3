@@ -52,7 +52,12 @@ app.post('/auth', (req, res) => {
 				// Redirect to home page based off userType
 				var usertype = results[0].userType
 				if (usertype === 'admin') {
-					res.render('admin')
+					var sql_users = "SELECT employee_id, firstname, surname, speciality, contract_type, start_date from Users"
+					connection.query(sql_users, function (err_users, users_data, fields_users) {
+						if (err_users) throw err_users
+						console.log(users_data)
+						res.render('admin', { userName: username, userData: users_data})
+					});		
 				}
 				if (usertype === 'employee') {
 					// app.get('selfhelp' , { name: username })
