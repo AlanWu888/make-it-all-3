@@ -38,8 +38,16 @@ app.post('/auth', (req, res) => {
 	// Capture the input fields
 	var username = req.body.username;
 	var password = req.body.password;
+	var current_user = 0;
 	// Ensure the input fields exists and are not empty
 	if (username && password) {
+		// get the user ID of the current session user
+		connection.query('SELECT userID FROM `userAuth` WHERE username = ?', [username], function (error, results, fields) {
+			// current_user = results[0].userID
+			current_user = 1
+			// console.log(current_user)
+		})
+
 		// Execute SQL query that'll select the account from the database based on the specified username and password
 		connection.query('SELECT username, password, userType FROM userAuth WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
 			// If there is an issue with the query, output the error
@@ -77,14 +85,15 @@ app.post('/auth', (req, res) => {
 									"ON c.software_id=soft.software_id " +
 									"INNER JOIN Solutions as solu " +
 									"ON prob.problem_id=solu.problem_id " +
-									"ORDER BY date_opened DESC"
+									"WHERE c.user_id = ? " +
+									"ORDER BY case_id DESC"
 					var sql_make = "SELECT HardwareMake.hardware_make_name FROM HardwareMake"
 					var sql_model = "SELECT HardwareModels.model_name FROM HardwareModels"
 					var sql_software = "SELECT Software.software_name FROM Software"
 					var sql_desc = "SELECT Problem.problem_title FROM Problem"
 					// Could have allowed "multipleStatements" but this is generally unsafe to use as it exposes to sqlinjection
 
-					connection.query(sql_cases, function (err_cases, cases_data, fields_cases) {
+					connection.query(sql_cases, [current_user], function (err_cases, cases_data, fields_cases) {
 						if (err_cases) throw err_cases
 						// console.log(cases_data)
 
