@@ -43,8 +43,7 @@ app.post('/auth', (req, res) => {
 	if (username && password) {
 		// get the user ID of the current session user
 		connection.query('SELECT userID FROM `userAuth` WHERE username = ?', [username], function (error, results, fields) {
-			// current_user = results[0].userID
-			current_user = 1
+			current_user = results[0].userID
 			// console.log(current_user)
 		})
 
