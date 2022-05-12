@@ -49,12 +49,18 @@ app.post('/employee', (req, res) => {
 	var problem = req.body.selectDescription;
 	var problem2 = req.body.unseenProblem;
 
-	// INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, '2', '2022-05-02', '3', '1', '1', 'Pending');
-	var sql_insert = "INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, ?, ?, ?, ?, ?, 'Pending')";
-	connection.query(sql_insert, [user_id, date, software, model, problem], function (error, results, fields) {
-		if (error) throw error;
-		console.log("successfully added");
-	})
+	if (problem != 999) {
+		// INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, '2', '2022-05-02', '3', '1', '1', 'Pending');
+		var sql_insert = "INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, ?, ?, ?, ?, ?, 'Pending')";
+		connection.query(sql_insert, [user_id, date, software, model, problem], function (error, results, fields) {
+			if (error) throw error;
+			console.log("successfully added");
+		})
+	} else {
+		// add new row to the problems table
+		// get the id of the new problem
+		// add new row to columns table
+	}
 
 	// get username
 	connection.query('SELECT username FROM `userAuth` WHERE userID = ?', [user_id], function (error, results, fields) {
