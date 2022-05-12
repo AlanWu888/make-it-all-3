@@ -4,6 +4,7 @@ const session = require('express-session')
 const path = require('path')
 const connection = require('./database')	// requires database.js
 const app = express()
+const bodyParser = require('body-parser')
 
 app.set('view engine', 'ejs')   // set view engine
 
@@ -13,8 +14,10 @@ app.use(session({
 	saveUninitialized: true
 }));
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
+app.use(bodyParser.json())
 
 // http://localhost:3000/
 app.get('/', (req, res) => {
@@ -33,6 +36,32 @@ app.get('/auth', (req, res) => {
 	res.render('login', { errormessage: 'Something went wrong please try again' })
 })
 
+app.post('/newproblemadded', (req, res) => {
+	console.log(req.body.user_id_field);
+	console.log(req.body.newProblem_date);
+	console.log(req.body.selectMake);
+	console.log(req.body.selectModel);
+	console.log(req.body.selectSoftware);
+	console.log(req.body.selectDescription);
+	console.log(req.body.unseenProblem);
+
+	var user_id = req.body.user_id_field;
+	var date = req.body.newProblem_date;
+	var make = req.body.selectMake;
+	var model = req.body.selectModel;
+	var software = req.body.selectSoftware;
+	var problem = req.body.selectDescription;
+	var problem2 = req.body.unseenProblem;
+
+	// INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, '2', '2022-05-02', '3', '1', '1', 'Pending');
+	var sql_insert = "INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, ?, ?, ?, ?, ?, 'Pending')";
+	connection.query(sql_insert, [user_id, date, software, model, problem], function (error, results, fields) {
+		if (error) throw error;
+		console.log("successfully added");
+	})
+	res.sendFile(path.join(__dirname + '/public/login.html'))
+})
+
 // http://localhost:3000/auth
 app.post('/auth', (req, res) => {
 	// Capture the input fields
@@ -44,7 +73,7 @@ app.post('/auth', (req, res) => {
 		// get the user ID of the current session user
 		connection.query('SELECT userID FROM `userAuth` WHERE username = ?', [username], function (error, results, fields) {
 			current_user = results[0].userID
-			// console.log(current_user)
+			// console.log("current user is: " + current_user)
 		})
 
 		// Execute SQL query that'll select the account from the database based on the specified username and password
@@ -112,7 +141,7 @@ app.post('/auth', (req, res) => {
 										if (err_softw) throw err_softw
 										// console.log(softw_data)
 			
-										res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data})
+										res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data, curr_user: current_user})
 									});
 								});
 							});

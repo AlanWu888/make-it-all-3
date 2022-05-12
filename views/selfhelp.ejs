@@ -47,9 +47,17 @@
 		});
 	});
 
-	function submitTicket() {
-		// Send ticket to specialist, will refresh the page too
+	function getDate() {
+		// gets the date for when a new problem is reported
 		// Author : Alan
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0');
+		var yyyy = today.getFullYear();
+
+		today = yyyy + "-" + mm + "-" + dd;			
+		
+		document.getElementById('newProblem_date').value=today;
 	}
 </script>
 
@@ -73,7 +81,7 @@
 				<b>Welcome back, <%=userName || "USER" %></b>
 			</div>
 			<div class="col-12 col-sm-4 mt-2 mb-3 mt-sm-2 mr-0 text-right">
-				<button type="button" class="btn btn-block" data-toggle="modal" data-target="#newProblemModal">
+				<button type="button" class="btn btn-block" data-toggle="modal" data-target="#newProblemModal" onclick="getDate()">
 					Report new problem
 				</button>
 			</div>
@@ -116,8 +124,8 @@
 				<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
 					<div class="col-10 col-md-7 col-lg-4">
 						<!-- card 1 -->
-						<div class="card testimonial-card" 
-						data-values="Case <%=data.case_id + data.status_code + data.date_opened + data.problem_title + data.hardware_make_name + data.model_name + data.software_name %>">
+						<div class="card testimonial-card"
+							data-values="Case <%=data.case_id + data.status_code + data.date_opened + data.problem_title + data.hardware_make_name + data.model_name + data.software_name %>">
 							<!-- card header -->
 							<div class="card-header">
 								<div class="row">
@@ -226,61 +234,85 @@
 					</div>
 					<!-- body -->
 					<div class="modal-body">
-						<form>
+						<form action="/newproblemadded" method="post">
 							<div class="form-group">
+								<div class="row">
+									<div class="col-2">
+										User ID:
+									</div>
+									<div class="col-2">
+										<input readonly name="user_id_field" type="text" class="form-control" value="<%= curr_user %>"/>
+									</div>
+									<div class="col-2 offset-1">
+										Date:
+									</div>
+									<div class="col-3">
+										<input readonly id="newProblem_date" name="newProblem_date" type="text" class="form-control" value=""/>
+									</div>
+								</div>
+								<hr>
 								<label for="selectMake">Make</label>
-								<select class="form-control" id="selectMake">
+								<select class="form-control" name="selectMake">
 									<option value="0">Choose...</option>
 									<!-- add js function to allow for search -->
 									<% if(makes.length!=0){ var i=1; makes.forEach(function(make_data){ %>
-										<option value="<%= i %>"><%= make_data.hardware_make_name.toString() %></option>
+										<option value="<%= i %>">
+											<%= make_data.hardware_make_name.toString() %>
+										</option>
 										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Model</label>
-								<select class="form-control" id="selectModel">
+								<select class="form-control" name="selectModel">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
 									<% if(models.length!=0){ var i=1; models.forEach(function(models_data){ %>
-										<option value="<%= i %>"><%= models_data.model_name.toString() %></option>
+										<option value="<%= i %>">
+											<%= models_data.model_name.toString() %>
+										</option>
 										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Software type</label>
-								<select class="form-control" id="selectSoftware">
+								<select class="form-control" name="selectSoftware">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
 									<% if(soft.length!=0){ var i=1; soft.forEach(function(soft_data){ %>
-										<option value="<%= i %>"><%= soft_data.software_name.toString() %></option>
+										<option value="<%= i %>">
+											<%= soft_data.software_name.toString() %>
+										</option>
 										<% i++; })} %>
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="selectMake">Problem Description</label>
-								<select class="form-control" id="selectDescription">
+								<select class="form-control" name="selectDescription">
 									<!-- add js function to allow for search -->
 									<option value="0">Choose...</option>
 									<% if(desc.length!=0){ var i=1; desc.forEach(function(desc_data){ %>
-										<option value="<%= i %>"><%= desc_data.problem_title.toString() %></option>
+										<option value="<%= i %>">
+											<%= desc_data.problem_title.toString() %>
+										</option>
 										<% i++; })} %>
-									<option value="999">My problem is not listed</option>
+											<option value="999">My problem is not listed</option>
 								</select>
 							</div>
 							<div class="form-group unseen" id="div_unseenProblem">
 								<label for="unseenProblem">Please enter your problem:</label>
-								<input type="text" class="form-control" id="unseenProblem"
+								<input type="text" class="form-control" name="unseenProblem"
 									aria-describedby="lbl_unseenProblem" placeholder="Enter problem">
 								<small id="lbl_unseenProblem" class="form-text text-muted">Please aim to make the title
 									as concise as possible</small>
 							</div>
+
+							<!-- footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Submit ticket</button>
+							</div>
 						</form>
-					</div>
-					<!-- footer -->
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" onclick="submitTicket()">Submit ticket</button>
 					</div>
 				</div>
 			</div>
