@@ -36,18 +36,14 @@ app.get('/auth', (req, res) => {
 	res.render('login', { errormessage: 'Something went wrong please try again' })
 })
 
-app.post('/newproblemadded', (req, res) => {
-	console.log(req.body.user_id_field);
-	console.log(req.body.newProblem_date);
-	console.log(req.body.selectMake);
-	console.log(req.body.selectModel);
-	console.log(req.body.selectSoftware);
-	console.log(req.body.selectDescription);
-	console.log(req.body.unseenProblem);
+app.get('/employee', (req, res) => {
+	res.render('login', { errormessage: 'Something went wrong please try again' })
+})
 
+app.post('/employee', (req, res) => {
+	var username;
 	var user_id = req.body.user_id_field;
 	var date = req.body.newProblem_date;
-	var make = req.body.selectMake;
 	var model = req.body.selectModel;
 	var software = req.body.selectSoftware;
 	var problem = req.body.selectDescription;
@@ -59,7 +55,60 @@ app.post('/newproblemadded', (req, res) => {
 		if (error) throw error;
 		console.log("successfully added");
 	})
-	res.sendFile(path.join(__dirname + '/public/login.html'))
+
+	// get username
+	connection.query('SELECT username FROM `userAuth` WHERE userID = ?', [user_id], function (error, results, fields) {
+		if (error) throw error;
+		username = results[0].username
+		// console.log("current user is: " + username)
+	})
+
+	// redirect to selfhelp page
+	var sql_cases = "SELECT case_id, date_opened, status_code, software_name, hardware_make_name, model_name, problem_title, solution " +
+			"FROM Cases as c " + 
+			"INNER JOIN Problem as prob " + 
+			"ON c.problem_id=prob.problem_id " + 
+			"INNER JOIN HardwareModels as models " +
+			"ON c.hardware_id=models.model_id " +
+			"INNER JOIN HardwareMake as make " +
+			"ON models.make_id=make.hardware_make_id " +
+			"INNER JOIN Software as soft " +
+			"ON c.software_id=soft.software_id " +
+			"INNER JOIN Solutions as solu " +
+			"ON prob.problem_id=solu.problem_id " +
+			"WHERE c.user_id = ? " +
+			"ORDER BY case_id DESC"
+	var sql_make = "SELECT HardwareMake.hardware_make_name FROM HardwareMake"
+	var sql_model = "SELECT HardwareModels.model_name FROM HardwareModels"
+	var sql_software = "SELECT Software.software_name FROM Software"
+	var sql_desc = "SELECT Problem.problem_title FROM Problem"
+
+	connection.query(sql_cases, [user_id], function (err_cases, cases_data, fields_cases) {
+		if (err_cases) throw err_cases
+		// console.log(cases_data)
+
+		connection.query(sql_make, function (err_makes, makes_data, fields_makes) {
+			if (err_makes) throw err_makes
+			// console.log(makes_data)
+
+			connection.query(sql_model, function (err_model, model_data, fields_model) {
+				if (err_model) throw err_model
+				// console.log(model_data)
+
+				connection.query(sql_desc, function (err_desc, desc_data, fields_desc) {
+					if (err_desc) throw err_desc
+					// console.log(desc_data)
+
+					connection.query(sql_software, function (err_softw, softw_data, fields_model) {
+						if (err_softw) throw err_softw
+						// console.log(softw_data)
+
+						res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data, curr_user: user_id})
+					});
+				});
+			});
+		});
+	});
 })
 
 // http://localhost:3000/auth
