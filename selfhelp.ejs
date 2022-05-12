@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- notes:
+			> unopened
+			> seen
+			> solution offered / pending
+			> resolved
+		-->
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<!-- Bootstrap icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="css/selfhelp.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<title>Make-It-All</title>
+</head>
+<script>
+	$(document).ready(function () {
+		// Toggle own problem title based off Problem description dropdown in new problem modal
+		// Author : Alan
+		$('#selectDescription').on('change', function () {
+			if (this.value == '999') {
+				$("#div_unseenProblem").show();
+			} else {
+				$("#div_unseenProblem").hide();
+			}
+		});
+
+		// search filter functionality
+		// Author : Alan
+		$("#myInput").on("keyup", function () {
+			var input = $(this).val().toUpperCase();
+			console.log("input: " + input);
+			$(".card").each(function () {
+				if ($(this).data("values").toString().toUpperCase().indexOf(input) < 0) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			})
+		});
+	});
+
+	function submitTicket() {
+		// Send ticket to specialist, will refresh the page too
+		// Author : Alan
+	}
+</script>
+
+<body>
+	<nav class="navbar justify-content-between navbar-dark bg-dark">
+		<!-- Logo -->
+		<a class="navbar-brand" href="#">
+			<img src="assets/logo.png" width="40" height="40" class="mr-2">
+			<b>Make-It-All</b>
+		</a>
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link mr-2" href="login">Log out</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container">
+		<div class="row justify-content-between">
+			<div class="col-12 col-sm-8 my-sm-auto mt-2">
+				<b>Welcome back, <%=userName || "USER" %></b>
+			</div>
+			<div class="col-12 col-sm-4 mt-2 mb-3 mt-sm-2 mr-0 text-right">
+				<button type="button" class="btn btn-block" data-toggle="modal" data-target="#newProblemModal">
+					Report new problem
+				</button>
+			</div>
+		</div>
+		<hr>
+
+		<!-- problem search & filters -->
+		<div class="row">
+			<div class="col-md-7">
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control ml-sm-2" type="search" placeholder="Search" aria-label="Search"
+						id="myInput">
+				</form>
+			</div>
+			<div class="col-md-4 mb-3 my-2 my-lg-0">
+				<div class="ml-2 row">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+						<label class="form-check-label" for="flexCheckDefault">
+							View recent problems
+						</label>
+					</div>
+				</div>
+				<div class="ml-2 row">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+						<label class="form-check-label" for="flexCheckDefault">
+							View unresolved problems
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<!-- scroll of cards -->
+		<div class="testimonial-group mb-5">
+			<div class="row Flipped">
+				<!-- card generation code-->
+				<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
+					<div class="col-10 col-md-7 col-lg-4">
+						<!-- card 1 -->
+						<div class="card testimonial-card" 
+						data-values="Case <%=data.case_id + data.status_code + data.date_opened + data.problem_title + data.hardware_make_name + data.model_name + data.software_name %>">
+							<!-- card header -->
+							<div class="card-header">
+								<div class="row">
+									<div class="col-6" id="searchable">
+										Case <%=data.case_id%>
+									</div>
+									<div class="col-6 text-right">
+										<!--	
+												Open:	ticket has been submitted 	??? do we need this, seems obsolete
+											  Closed:	issue has been resolved		[dark grey]						<span class="badge badge-dark">Closed</span>
+											 Pending:	user is trying the solutions offered to them	[green]		<span class="badge badge-success">Pending</span>
+											Assigned:	user has been assigned to a specialist			[yellow]	<span class="badge badge-warning">Assigned</span>
+										-->
+										<%if(data.status_code==='Closed'){%>
+											<span class="badge badge-dark">Closed</span>
+											<%}%>
+												<%if(data.status_code==='Pending' ){%>
+													<span class="badge badge-success">Pending</span>
+													<%}%>
+														<%if(data.status_code==='Assigned' ){%>
+															<span class="badge badge-warning">Assigned</span>
+															<%}%>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										Date submitted: <%=data.date_opened%>
+									</div>
+								</div>
+							</div>
+							<!-- card body -->
+							<div class="card-body">
+								<h5 class="text-truncate card-title">
+									<%=data.problem_title%>
+								</h5>
+								<ul class="no-list-style">
+									<li>
+										<%=data.hardware_make_name%>
+									</li>
+									<li>
+										<%=data.model_name%>
+									</li>
+									<li>
+										<%=data.software_name%>
+									</li>
+								</ul>
+								<hr>
+								<!-- solution fix here -->
+								<b>Solution offered</b>
+								<div class="col text-truncate">
+									<%= data.solution %>
+								</div>
+							</div>
+							<!-- card footer -->
+							<div class="card-footer text-muted">
+								<div class="btn dropup">
+									<!-- Additional actions -->
+									<a class="btn btn-dropup dropdown-toggle" href="#" role="button"
+										id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false">
+										Actions
+									</a>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<a class="dropdown-item" href="#">Solution offered works</a>
+										<a class="dropdown-item" href="#">Solution did not work</a>
+									</div>
+								</div>
+								<button type="button" class="btn" data-toggle="modal"
+									data-target="#modal<%= i.toString() %>">
+									Expand
+								</button>
+							</div>
+						</div>
+					</div>
+					<% i++; }) %>
+						<% } else { %>
+							<div class="testimonial-group mb-5">
+								<div class="row">
+									<div class="col-10 col-md-7 col-lg-4">
+										<div class="card testimonial-card">
+											<div class="card-header">
+												<div class="row">
+													<div class="col-6">
+														No Tickets found!
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<% } %>
+			</div>
+		</div>
+		<!-- New Problem Modal -->
+		<div class="modal fade" id="newProblemModal" tabindex="-1" role="dialog" aria-labelledby="lbl_newProblemModal"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+					<!-- header -->
+					<div class="modal-header">
+						<h5 class="modal-title" id="lbl_newProblemModal">Report new problem</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<!-- body -->
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="selectMake">Make</label>
+								<select class="form-control" id="selectMake">
+									<option value="0">Choose...</option>
+									<!-- add js function to allow for search -->
+									<% if(makes.length!=0){ var i=1; makes.forEach(function(make_data){ %>
+										<option value="<%= i %>"><%= make_data.hardware_make_name.toString() %></option>
+										<% i++; })} %>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="selectMake">Model</label>
+								<select class="form-control" id="selectModel">
+									<!-- add js function to allow for search -->
+									<option value="0">Choose...</option>
+									<% if(models.length!=0){ var i=1; models.forEach(function(models_data){ %>
+										<option value="<%= i %>"><%= models_data.model_name.toString() %></option>
+										<% i++; })} %>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="selectMake">Software type</label>
+								<select class="form-control" id="selectSoftware">
+									<!-- add js function to allow for search -->
+									<option value="0">Choose...</option>
+									<% if(soft.length!=0){ var i=1; soft.forEach(function(soft_data){ %>
+										<option value="<%= i %>"><%= soft_data.software_name.toString() %></option>
+										<% i++; })} %>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="selectMake">Problem Description</label>
+								<select class="form-control" id="selectDescription">
+									<!-- add js function to allow for search -->
+									<option value="0">Choose...</option>
+									<% if(desc.length!=0){ var i=1; desc.forEach(function(desc_data){ %>
+										<option value="<%= i %>"><%= desc_data.problem_title.toString() %></option>
+										<% i++; })} %>
+									<option value="999">My problem is not listed</option>
+								</select>
+							</div>
+							<div class="form-group unseen" id="div_unseenProblem">
+								<label for="unseenProblem">Please enter your problem:</label>
+								<input type="text" class="form-control" id="unseenProblem"
+									aria-describedby="lbl_unseenProblem" placeholder="Enter problem">
+								<small id="lbl_unseenProblem" class="form-text text-muted">Please aim to make the title
+									as concise as possible</small>
+							</div>
+						</form>
+					</div>
+					<!-- footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" onclick="submitTicket()">Submit ticket</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- card n modal generation code -->
+		<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
+			<div class="modal fade" id="modal<%= i.toString() %>" tabindex="-1" role="dialog"
+				aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<!-- modal header -->
+						<div class="modal-header">
+							<ul>
+								<li>
+									<h5 class="modal-title" id="modal<%= i.toString() %>Label">Case <%=data.case_id%>
+									</h5>
+								</li>
+								<li>
+									<p class="modal-title">Date submitted: <%=data.date_opened%>
+									</p>
+								</li>
+							</ul>
+							<%if(data.status_code==='Closed'){%>
+								<span class="badge badge-dark">Closed</span>
+								<%}%>
+									<%if(data.status_code==='Pending' ){%>
+										<span class="badge badge-success">Pending</span>
+										<%}%>
+											<%if(data.status_code==='Assigned' ){%>
+												<span class="badge badge-warning">Assigned</span>
+												<%}%>
+						</div>
+						<!-- modal body -->
+						<div class="modal-body">
+							<ul>
+								<li><b>Hardware Model:</b>
+									<%=data.hardware_make_name%>
+								</li>
+								<li><b>Hardware Make:</b>
+									<%=data.model_name%>
+								</li>
+								<li><b>Software type:</b>
+									<%=data.software_name%>
+								</li>
+								<li><b>Problem description:</b>
+									<%=data.problem_title%>
+								</li>
+							</ul>
+							<hr>
+							<b>Solution offered: </b>
+							<p>
+								<%=data.solution%>
+							</p>
+							<hr>
+							<h5>Notes</h5>
+							<br>
+							<!-- [TODO] Add notes ability -->
+							<button class="btn" type="button" data-toggle="collapse" data-target="#collapseNoteInput"
+								aria-expanded="false" aria-controls="collapseFilters">
+								+ Add Notes
+							</button>
+							<div class="collapse" id="collapseNoteInput">
+								<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+							</div>
+						</div>
+						<!-- modal footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn">Submit</button>
+							<button type="button" class="btn" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% i++; })} %>
+	</div> <!-- container modal -->
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
