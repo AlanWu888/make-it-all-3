@@ -318,7 +318,7 @@
 				</div>
 			</div>
 			
-			<!-- Modal for Adding a new problem -->
+			<!-- Modal for Adding a new user -->
 			<div class="modal fade" id="addnewuser" tabindex="-1" role="dialog" aria-labelledby="lbl_newUserModal"
 				aria-hidden="true">
 				<!-- modal container -->
@@ -331,66 +331,80 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div class="container-fluid">
-								<div class="parent-container d-flex  w-100 bg-light" id="parent">
-									<div class="container w-50 " id="inputproblem">
-										<!-- User ID field -->
-										<div class="row">
-											<div class="col-sm ">
-												<div class="input-group mb-3">
-													<div class="input-group-prepend">
-														<span class="input-group-text" id="basic-addon1">User ID</span>
+							<form action="/admin" method="post">
+								<div class="container-fluid">
+									<div class="parent-container d-flex  w-100 bg-light" id="parent">
+										<div class="container w-50 " id="inputproblem">
+											<!-- User ID field -->
+											<div class="row">
+												<div class="col-sm ">
+													<div class="input-group mb-3">
+														<div class="input-group-prepend">
+															<span class="input-group-text" id="basic-addon1">User ID</span>
+														</div>
+														<input name="userID" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" value="5" disabled>
 													</div>
-													<input type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" value="5" disabled>
 												</div>
 											</div>
-										</div>
-										<!-- user name field -->
-										<div class="row">
-											<div class="col-sm ">
-												<div class="input-group mb-3">
-													<div class="input-group-prepend">
-														<span class="input-group-text">User Name</span>
+											<!-- first name field -->
+											<div class="row">
+												<div class="col-sm ">
+													<div class="input-group mb-3">
+														<div class="input-group-prepend">
+															<span class="input-group-text">First name</span>
+														</div>
+														<input name="firstname" type="text" id="firstname" aria-label="First name" class="form-control">
 													</div>
-													<input type="text" id="username" aria-label="First name" class="form-control">
 												</div>
 											</div>
-										</div>
-										
-										<div class="row">
-											<!-- User type field -->
-											<div class="col-4 mb-3 ">
-												<select class="form-control form-control" id="user-type">
-													<option value="0">Operator</option>
-													<option value="1">Specialist</option>
-												</select>
-											</div>
-											<!-- Speciality field -->
-											<div class="col-4 mb-3 ">
-												<select class="form-control form-control" id="spec-type">
-													<option value="0">N/A</option>
-													<option value="1">Software</option>
-													<option value="2">Hardware</option>
-													<option value="3">Network</option>
-												</select>
-											</div>
-											<!-- Contract type field -->
-											<div class="col-4 mb-3 ">
-												<select class="form-control form-control" id="contract-type">
-													<option value="0">Permanent</option>
-													<option value="1">Temporary</option>
-												</select>
-											</div>
-										</div>
 
-										<!-- Submit button -->
-										<div class="row">
-											<!-- change to sumbit type-->
-											<button type="button" class="btn btn-primary m-3" onclick="submit()">Add User</button>
+											<!-- surname field -->
+											<div class="row">
+												<div class="col-sm ">
+													<div class="input-group mb-3">
+														<div class="input-group-prepend">
+															<span class="input-group-text">Surname</span>
+														</div>
+														<input name="surname" type="text" id="surname" aria-label="Surname" class="form-control">
+													</div>
+												</div>
+											</div>
+											
+											<div class="row">
+												<!-- User type field -->
+												<div class="col-4 mb-3 ">
+													<select name="userType" class="form-control form-control" id="user-type">
+														<option value="0">Operator</option>
+														<option value="1">Specialist</option>
+													</select>
+												</div>
+												<!-- Speciality field -->
+												<div class="col-4 mb-3 ">
+													<select name="speciality" class="form-control form-control" id="spec-type">
+														<option value="0">N/A</option>
+														<option value="1">Software</option>
+														<option value="2">Hardware</option>
+														<option value="3">Network</option>
+													</select>
+												</div>
+												<!-- Contract type field -->
+												<div class="col-4 mb-3 ">
+													<select name="contractType" class="form-control form-control" id="contract-type">
+														<option value="0">Permanent</option>
+														<option value="1">Temporary</option>
+													</select>
+												</div>
+											</div>
+
+											<!-- Submit button -->
+											<div class="row">
+												<!-- change to sumbit type-->
+												<button type="button" class="btn btn-primary m-3" onclick="submit()">Add User</button>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>

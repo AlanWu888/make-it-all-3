@@ -221,4 +221,18 @@ app.post('/auth', (req, res) => {
 	}
 });
 
+// admin page: insert new user to table
+// app.post('/admin', (req, res) => {
+
+// 	var userID = req.body.userID;
+// 	var firstname = req.body.firstname;
+// 	var surname = req.body.surname;
+// 	var userType = req.body.userType;
+// 	var speciality = req.body.speciality;
+// 	var contractType = req.body.contractType;
+
+	
+
+// });
+
 app.listen(5020);
