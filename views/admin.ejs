@@ -48,7 +48,7 @@
 					const contractTypes = ["Permanent", "Temporary"];
 					
 					var userID = $('#userID-number').val(); // store input values
-					var name = $('#username').val();
+					var name = $('#firstname').val();
 					var userType = userTypes[$('#user-type').val()];
 					var speciality = specialities[$('#spec-type').val()];
 					var contract = contractTypes[$('#contract-type').val()];
@@ -164,42 +164,6 @@
 								<td><a data-toggle="modal" data-target="#AliceModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
 							</tr>
 						<% i++; })} %>	
-						<tr>
-							<td>1</td>
-							<td>Alice</td>
-							<td>Operator</td>
-							<td>N/A</td>
-							<td>Permanent</td>
-							<td>01/01/1970</td>
-							<td><a data-toggle="modal" data-target="#AliceModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>Clara</td>
-							<td>Specialist</td>
-							<td>Software</td>
-							<td>Permanent</td>
-							<td>01/01/1970</td>
-							<td><a data-toggle="modal" data-target="#ClaraModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>Bert</td>
-							<td>Specialist</td>
-							<td>Hardware</td>
-							<td>Permanent</td>
-							<td>01/01/1970</td>
-							<td><a data-toggle="modal" data-target="#BertModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>Nick</td>
-							<td>Specialist</td>
-							<td>Network</td>
-							<td>Permanent</td>
-							<td>01/01/1970</td>
-							<td><a data-toggle="modal" data-target="#NickModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -342,7 +306,7 @@
 														<div class="input-group-prepend">
 															<span class="input-group-text" id="basic-addon1">User ID</span>
 														</div>
-														<input name="userID" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" value="5" disabled>
+														<input name="userID" value="<%=parseInt(userData[userData.length - 1].employeeID)+1 %>" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" disabled >
 													</div>
 												</div>
 											</div>

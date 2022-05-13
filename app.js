@@ -40,6 +40,10 @@ app.get('/employee', (req, res) => {
 	res.render('login', { errormessage: 'Something went wrong please try again' })
 })
 
+app.get('/admin', (req, res) => {
+	res.render('admin', { errormessage: 'Something went wrong please try again' })
+})
+
 app.post('/employee', (req, res) => {
 	var username;
 	var user_id = req.body.user_id_field;
@@ -225,13 +229,30 @@ app.post('/auth', (req, res) => {
 // app.post('/admin', (req, res) => {
 
 // 	var userID = req.body.userID;
-// 	var firstname = req.body.firstname;
-// 	var surname = req.body.surname;
+// 	var firstname = req.body.firstname.trim();
+// 	var surname = req.body.surname.trim();
 // 	var userType = req.body.userType;
 // 	var speciality = req.body.speciality;
 // 	var contractType = req.body.contractType;
 
-	
+// 	// create unique username
+// 	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
+
+// 	// sql queries
+// 	var sqlAddtoUsers = "INSERT INTO `Users` (`employee_id`, `firstname`, `surname`, `speciality`, `contract_type`, `start_date`) VALUES (?, ?, ?, ?, ?, ?)";
+// 	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, 'test123', ?, ?)";
+
+// 	// check fields are not empty
+// 	if (firstname && surname) {
+// 		connection.query(sqlAddtoUsers, [userID, firstname, surname, userType, speciality, contractType], function(err_users, users_results, fields_users) {
+// 			if (err_users) throw err_users;
+// 			connection.query(sqlAddtoUserAuth, [userID, username, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
+// 				if (err_userAuth) throw err_userAuth;
+// 				console.log("successfully added");
+// 			});
+// 		});
+		
+// 	}
 
 // });
 
