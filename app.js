@@ -145,7 +145,7 @@ app.post('/auth', (req, res) => {
 
 				// If admin user signs in
 				if (usertype === 'admin') {
-					var sql_users = "SELECT employee_id, firstname, surname, speciality, contract_type, start_date from Users"
+					var sql_users = "SELECT userAuth.employeeID, Users.firstname, userAuth.userType, Users.speciality, Users.contract_type, Users.start_date FROM `Users` INNER JOIN userAuth ON Users.employee_id = userAuth.employeeID"
 					connection.query(sql_users, function (err_users, users_data, fields_users) {
 						if (err_users) throw err_users
 						console.log(users_data)
