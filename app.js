@@ -6,6 +6,19 @@ const connection = require('./database')	// requires database.js
 const app = express()
 const bodyParser = require('body-parser')
 
+////////////////////////////////////////////////////////////////////////
+
+function getDate() {
+
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0');
+	var yyyy = today.getFullYear();
+	today = yyyy + "-" + mm + "-" + dd;			
+
+	return today;
+}
+
 app.set('view engine', 'ejs')   // set view engine
 
 app.use(session({
@@ -226,34 +239,55 @@ app.post('/auth', (req, res) => {
 });
 
 // admin page: insert new user to table
-// app.post('/admin', (req, res) => {
+app.post('/admin', (req, res) => {
 
-// 	var userID = req.body.userID;
-// 	var firstname = req.body.firstname.trim();
-// 	var surname = req.body.surname.trim();
-// 	var userType = req.body.userType;
-// 	var speciality = req.body.speciality;
-// 	var contractType = req.body.contractType;
+	var userID = parseInt(req.body.userID.trim());
+	var firstname = req.body.firstname.trim();
+	var surname = req.body.surname.trim();
+	var userType;
+	var speciality = req.body.speciality;
+	var contractType;
+ 	var date = getDate();
 
-// 	// create unique username
-// 	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
+	switch (parseInt(req.body.userType)) {
+		case 0:
+			userType = 'admin';
+		case 1:
+			userType = 'employee';
+		case 2:
+			userType = 'specialist';
+	}
 
-// 	// sql queries
-// 	var sqlAddtoUsers = "INSERT INTO `Users` (`employee_id`, `firstname`, `surname`, `speciality`, `contract_type`, `start_date`) VALUES (?, ?, ?, ?, ?, ?)";
-// 	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, 'test123', ?, ?)";
+	switch (parseInt(req.body.contractType)) {
+		case 0:
+			contractType = 'Permanent';
+		case 1:
+			contractType = 'Temporary';
+	}
 
-// 	// check fields are not empty
-// 	if (firstname && surname) {
-// 		connection.query(sqlAddtoUsers, [userID, firstname, surname, userType, speciality, contractType], function(err_users, users_results, fields_users) {
-// 			if (err_users) throw err_users;
-// 			connection.query(sqlAddtoUserAuth, [userID, username, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
-// 				if (err_userAuth) throw err_userAuth;
-// 				console.log("successfully added");
-// 			});
-// 		});
+	// create unique username
+	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
+
+	// sql queries
+	var sqlAddtoUsers = "INSERT INTO `Users` (`employee_id`, `firstname`, `surname`, `speciality`, `contract_type`, `start_date`) VALUES (?, ?, ?, ?, ?, ?)";
+	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, 'test123', ?, ?)";
+
+	// check fields are not empty
+	if (firstname && surname) {
+		connection.query(sqlAddtoUserAuth, [userID, username, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
+			if (err_userAuth) throw err_userAuth;
+			connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function(err_users, users_results, fields_users) {
+				if (err_users) throw err_users;
+				// res.render('admin', { userName: username, userData: users_results});
+				// back to admin page ??
+				console.log("successfully added");
+				
+			});
+		});
 		
-// 	}
+		
+	}
 
-// });
+});
 
 app.listen(5020);

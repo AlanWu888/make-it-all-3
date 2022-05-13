@@ -74,21 +74,7 @@
 				})
 			}
 			
-			function getDate() {
-				// original author: Jordan, adapted by Alan
-				// gets current date with custom format: MMM D YYYY, HH:MM
-				$(document).ready(function () {
-					var year = new Date().getFullYear().toString();
-					var month = new Date().getMonth().toString();
-					var day = new Date().getDate().toString();
-					if (day < 10)
-						day = '0' + day;
-					if (month < 10)
-						month = '0' + month;
-					var today = day + "/" + month + "/" + year;
-					$("#call-date").val(today);
-				})
-			}
+			
 			
 		</script>
 		<!-- Nav Bar -->
@@ -306,7 +292,7 @@
 														<div class="input-group-prepend">
 															<span class="input-group-text" id="basic-addon1">User ID</span>
 														</div>
-														<input name="userID" value="<%=parseInt(userData[userData.length - 1].employeeID)+1 %>" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" disabled >
+														<input name="userID" value="<%=parseInt(userData[userData.length - 1].employeeID)+1 %>" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" >
 													</div>
 												</div>
 											</div>
@@ -338,17 +324,19 @@
 												<!-- User type field -->
 												<div class="col-4 mb-3 ">
 													<select name="userType" class="form-control form-control" id="user-type">
-														<option value="0">Operator</option>
-														<option value="1">Specialist</option>
+														<option value="0">admin</option>
+														<option value="1">specialist</option>
+														<option value="2">employee</option>
 													</select>
 												</div>
 												<!-- Speciality field -->
 												<div class="col-4 mb-3 ">
 													<select name="speciality" class="form-control form-control" id="spec-type">
-														<option value="0">N/A</option>
-														<option value="1">Software</option>
-														<option value="2">Hardware</option>
-														<option value="3">Network</option>
+														<option value="0">Admin</option>
+														<option value="1">Hardware</option>
+														<option value="2">Network</option>
+														<option value="3">Software</option>
+														<option value="4">N/A</option>
 													</select>
 												</div>
 												<!-- Contract type field -->
