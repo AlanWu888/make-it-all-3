@@ -147,7 +147,7 @@
 								<td><%=data.speciality%></td>
 								<td><%=data.contract_type%></td>
 								<td><%=data.start_date%></td>
-								<td><a data-toggle="modal" data-target="#AliceModal"><button class="btn btn-secondary btn-sm">Manage</button></a></td>
+								<td><a data-toggle="modal" data-target="#modal<%= i.toString() %>"><button class="btn btn-secondary btn-sm">Manage</button></a></td>								
 							</tr>
 						<% i++; })} %>	
 					</tbody>
@@ -156,19 +156,20 @@
 			
 			<!-- Modal For Alice Info -->
 			<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
-			<div class="modal fade problemInfo" id="<% "modal" + i.toString() %>" tabindex="-1" role="dialog" aria-labelledby="<% "modal" + i.toString() + "Label" %>" aria-hidden="true">
+			<div class="modal fade problemInfo" id="modal<%= i.toString() %>" tabindex="-1" role="dialog"
+					aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">User 1 - Alice</h5>
+							<h5 class="modal-title" id="exampleModalLongTitle">User <%=data.employee_id%> - <%=data.firstname%></h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
 							<ul>
-								<li><b>User ID:</b><%=data.employee_id%></li>
-								<li><b>User Name:</b><%=data.firstname%></li>
+								<li><b>User ID: </b><%=data.employee_id%></li>
+								<li><b>User Name: </b><%=data.firstname%></li>
 								<li><b>User Type:</b><%=data.surname%></li>
 								<li><b>Speciality:</b><%=data.speciality%></li>
 								<li><b>Contract Type:</b><%=data.contract_type%></li>
