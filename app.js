@@ -5,11 +5,11 @@ const path = require('path')
 const connection = require('./database')	// requires database.js
 const app = express()
 const bodyParser = require('body-parser')
-const conn = require('./database')
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 function getDate() {
+	// Author : Alan
 	var today = new Date();
 	var dd = String(today.getDate()).padStart(2, '0');
 	var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -20,22 +20,22 @@ function getDate() {
 }
 
 function generatePassword() {
-
+	// Auhtor : Jordan
 	// generate random 8 character password:
-
 	var pass = '';
-	var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
-			'abcdefghijklmnopqrstuvwxyz0123456789@#$';
-	  
+	var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+		'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
 	for (let i = 1; i <= 8; i++) {
 		var char = Math.floor(Math.random()
-					* str.length + 1);
-		  
+			* str.length + 1);
+
 		pass += str.charAt(char)
 	}
-	  
 	return pass;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.set('view engine', 'ejs')   // set view engine
 
@@ -50,18 +50,43 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 app.use(bodyParser.json())
 
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get('/auth/delete/:employee_ID', function (req, res, next) {
+	// Author: Raynell
+	var id = req.params.employee_ID;
+
+	var deleteUser = `DELETE FROM Users WHERE employee_id = "${id}"`
+	var deleteAuth = `DELETE FROM userAuth WHERE employeeID = "${id}"`
+	var sql_users = "SELECT userAuth.employeeID as employee_ID, Users.firstname, userAuth.userType as userType, Users.speciality, Users.contract_type, Users.start_date FROM `Users` INNER JOIN userAuth ON Users.employee_id = userAuth.employeeID"
+
+	connection.query(deleteUser, function (err_userDelete, userDelete_results, userDelete_fields) {
+		if (err_userDelete) {
+			throw err_userDelete;
+		}
+		connection.query(deleteAuth, function (err_userAuthDelete, userAuthDelete_results, userAuthDelete_fields) {
+			if (err_userAuthDelete) {
+				throw err_userAuthDelete;
+			} else {
+				//connection.query(sql_users, function (err_users, users_data, fields_users) {
+				//		if (err_users) throw err_users
+				//		console.log(users_data)
+				//		res.render('admin', { userData: users_data})
+				//});		
+				//res.render('login', { errormessage: 'Please enter Username and Password!' })
+				res.redirect("/login")
+			}
+		})
+	})
+});
 
 // http://localhost:3000/
 app.get('/', (req, res) => {
-	// Render login template
 	res.sendFile(path.join(__dirname + '/public/login.html'))
 })
 
 // http://localhost:3000/login
 app.get('/login', (req, res) => {
-	// Render login template
-	//res.sendFile(path.join(__dirname + '/login.html'))
 	res.sendFile(path.join(__dirname + '/public/login.html'))
 })
 
@@ -78,28 +103,30 @@ app.get('/admin', (req, res) => {
 })
 
 app.post('/solutionOutcome', (req, res) => {
+	// Author : Alan
+	// used for updating card status codes
 	var username;
 	var user_id = req.body.user_session_id;
 	var values = req.body.selectAcion;
-	var action = values.substring(0,1);
-	var case_id =  values.substr(-(values.length-2));
+	var action = values.substring(0, 1);
+	var case_id = values.substr(-(values.length - 2));
 
 	// console.log(req.body.user_session_id);
 
 	var sql_status_assign = "UPDATE Cases " +
-							"SET status_code = 'Assigned' "+
-							"WHERE case_id = ?"
+		"SET status_code = 'Assigned' " +
+		"WHERE case_id = ?"
 	var sql_status_closed = "UPDATE Cases " +
-							"SET status_code = 'Closed' "+
-							"WHERE case_id = ?"
-	if (action==="1"){
-		connection.query(sql_status_closed, [case_id], function(error, results, fields) {
+		"SET status_code = 'Closed' " +
+		"WHERE case_id = ?"
+	if (action === "1") {
+		connection.query(sql_status_closed, [case_id], function (error, results, fields) {
 			if (error) throw error;
 			console.log("change succesful - closed case");
 		})
 	}
-	if (action==="2") {
-		connection.query(sql_status_assign, [case_id], function(error, results, fields) {
+	if (action === "2") {
+		connection.query(sql_status_assign, [case_id], function (error, results, fields) {
 			if (error) throw error;
 			console.log("change succesful - assigned to specialist");
 		})
@@ -135,23 +162,17 @@ app.post('/solutionOutcome', (req, res) => {
 
 	connection.query(sql_cases, [user_id], function (err_cases, cases_data, fields_cases) {
 		if (err_cases) throw err_cases
-		// console.log(cases_data)
 
 		connection.query(sql_make, function (err_makes, makes_data, fields_makes) {
 			if (err_makes) throw err_makes
-			// console.log(makes_data)
 
 			connection.query(sql_model, function (err_model, model_data, fields_model) {
 				if (err_model) throw err_model
-				// console.log(model_data)
 
 				connection.query(sql_desc, function (err_desc, desc_data, fields_desc) {
 					if (err_desc) throw err_desc
-					// console.log(desc_data)
-
 					connection.query(sql_software, function (err_softw, softw_data, fields_model) {
 						if (err_softw) throw err_softw
-						// console.log(softw_data)
 
 						res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data, curr_user: user_id })
 					});
@@ -162,6 +183,8 @@ app.post('/solutionOutcome', (req, res) => {
 })
 
 app.post('/employee', (req, res) => {
+	// Author : Alan
+	// used to add new problems
 	var username;
 	var user_id = req.body.user_id_field;
 	var date = req.body.newProblem_date;
@@ -170,8 +193,7 @@ app.post('/employee', (req, res) => {
 	var problem = req.body.selectDescription;
 	var problem2 = req.body.unseenProblem;
 
-	if (problem != 999) {
-		// INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, '2', '2022-05-02', '3', '1', '1', 'Pending');
+	if (problem != 999) {		// this is for "problem not listed, funcionality was not added due to time restraints... see else clause"
 		var sql_insert = "INSERT INTO `Cases` (`case_id`, `user_id`, `date_opened`, `software_id`, `hardware_id`, `problem_id`, `status_code`) VALUES (NULL, ?, ?, ?, ?, ?, 'Pending')";
 		connection.query(sql_insert, [user_id, date, software, model, problem], function (error, results, fields) {
 			if (error) throw error;
@@ -187,7 +209,6 @@ app.post('/employee', (req, res) => {
 	connection.query('SELECT username FROM `userAuth` WHERE userID = ?', [user_id], function (error, results, fields) {
 		if (error) throw error;
 		username = results[0].username
-		// console.log("current user is: " + username)
 	})
 
 	// redirect to selfhelp page
@@ -212,23 +233,18 @@ app.post('/employee', (req, res) => {
 
 	connection.query(sql_cases, [user_id], function (err_cases, cases_data, fields_cases) {
 		if (err_cases) throw err_cases
-		// console.log(cases_data)
 
 		connection.query(sql_make, function (err_makes, makes_data, fields_makes) {
 			if (err_makes) throw err_makes
-			// console.log(makes_data)
 
 			connection.query(sql_model, function (err_model, model_data, fields_model) {
 				if (err_model) throw err_model
-				// console.log(model_data)
 
 				connection.query(sql_desc, function (err_desc, desc_data, fields_desc) {
 					if (err_desc) throw err_desc
-					// console.log(desc_data)
 
 					connection.query(sql_software, function (err_softw, softw_data, fields_model) {
 						if (err_softw) throw err_softw
-						// console.log(softw_data)
 
 						res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data, curr_user: user_id })
 					});
@@ -240,14 +256,14 @@ app.post('/employee', (req, res) => {
 
 // http://localhost:3000/auth
 app.post('/auth', (req, res) => {
-	// Capture the input fields
+	// Author(s) : Alan, Raynell, Jordan
+	// Routes users from login screen
 	var username = req.body.username;
 	var password = req.body.password;
 	var current_user = 0;
-	// Ensure the input fields exists and are not empty
-	if (username && password) {
-		// get the user ID of the current session user
-		connection.query('SELECT userID FROM `userAuth` WHERE username = ?', [username], function (error, results, fields) {
+
+	if (username && password) {																									// Ensure the input fields exists and are not empty
+		connection.query('SELECT userID FROM `userAuth` WHERE username = ?', [username], function (error, results, fields) {	// get the user ID of the current session user
 			current_user = results[0].userID
 			// console.log("current user is: " + current_user)
 		})
@@ -256,27 +272,24 @@ app.post('/auth', (req, res) => {
 		connection.query('SELECT username, password, userType FROM userAuth WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
 			// If there is an issue with the query, output the error
 			if (error) throw error;
-			// If the account exists
-			if (results.length > 0) {
-				// Authenticate the user
+			
+			if (results.length > 0) {		// If the account exists, authenticate the user
 				req.session.loggedin = true;
 				req.session.username = username;
-				// Redirect to home page based off userType
-				var usertype = results[0].userType
+				var usertype = results[0].userType		// get user type to route different users
 
-				// If admin user signs in
-				if (usertype === 'admin') {
-					var sql_users = "SELECT userAuth.employeeID, Users.firstname, userAuth.userType, Users.speciality, Users.contract_type, Users.start_date FROM `Users` INNER JOIN userAuth ON Users.employee_id = userAuth.employeeID"
+				if (usertype === 'admin') {		// If admin user signs in
+					// Author : Raynell
+					var sql_users = "SELECT userAuth.employeeID as employee_ID, Users.firstname, userAuth.userType as userType, Users.speciality, Users.contract_type, Users.start_date FROM `Users` INNER JOIN userAuth ON Users.employee_id = userAuth.employeeID"
 					connection.query(sql_users, function (err_users, users_data, fields_users) {
 						if (err_users) throw err_users
-						console.log(users_data)
+						// console.log(users_data)
 						res.render('admin', { userName: username, userData: users_data })
 					});
 				}
-
-				// If employee user signs in
-				if (usertype === 'employee') {
-					// app.get('selfhelp' , { name: username })
+				
+				if (usertype === 'employee') {	// If employee user signs in
+					// Author : Alan
 					var sql_cases = "SELECT case_id, date_opened, status_code, software_name, hardware_make_name, model_name, problem_title, solution " +
 						"FROM Cases as c " +
 						"INNER JOIN Problem as prob " +
@@ -295,28 +308,28 @@ app.post('/auth', (req, res) => {
 					var sql_model = "SELECT HardwareModels.model_name FROM HardwareModels"
 					var sql_software = "SELECT Software.software_name FROM Software"
 					var sql_desc = "SELECT Problem.problem_title FROM Problem"
-					// Could have allowed "multipleStatements" but this is generally unsafe to use as it exposes to sqlinjection
-
+					// Could have allowed "multipleStatements" but this is generally unsafe to use as it exposes to sql injection vulnerabilities
 					connection.query(sql_cases, [current_user], function (err_cases, cases_data, fields_cases) {
+						// get cases
 						if (err_cases) throw err_cases
-						// console.log(cases_data)
 
 						connection.query(sql_make, function (err_makes, makes_data, fields_makes) {
+							// get hardware makes, to fill dropdown
 							if (err_makes) throw err_makes
-							// console.log(makes_data)
 
 							connection.query(sql_model, function (err_model, model_data, fields_model) {
+								// get hardware models, to fill dropdown
 								if (err_model) throw err_model
-								// console.log(model_data)
 
 								connection.query(sql_desc, function (err_desc, desc_data, fields_desc) {
+									// get problem description titles, to fill dropdown
 									if (err_desc) throw err_desc
-									// console.log(desc_data)
 
 									connection.query(sql_software, function (err_softw, softw_data, fields_model) {
+										// get software types, to fill dropdown
 										if (err_softw) throw err_softw
-										// console.log(softw_data)
 
+										// render selfhelp page with the results of the above sql queuries
 										res.render('selfhelp', { userName: username, userData: cases_data, makes: makes_data, models: model_data, desc: desc_data, soft: softw_data, curr_user: current_user })
 									});
 								});
@@ -325,8 +338,8 @@ app.post('/auth', (req, res) => {
 					});
 				}
 
-				// If specialist user signs in
-				if (usertype === 'specialist') {
+				if (usertype === 'specialist') {	// If specialist user signs in
+					// Author : Alan
 					var sql_cases = "SELECT case_id, date_opened, status_code, software_name, hardware_make_name, model_name, problem_title, solution " +
 						"FROM Cases as c " +
 						"INNER JOIN " +
@@ -347,16 +360,14 @@ app.post('/auth', (req, res) => {
 						"WHERE status_code = 'Assigned' " +
 						"ORDER BY date_opened DESC"
 					connection.query(sql_cases, [current_user], function (err_cases, cases_data, fields_cases) {
+						// get cases for the specialists
 						if (err_cases) throw err_cases
-						// console.log(cases_data)
 						res.render('specialist', { name: username, userData: cases_data })
 					})
 				}
 			} else {
 				res.render('login', { errormessage: 'Incorrect Username and/or Password!' })
-				// res.send('Incorrect Username and/or Password!')
 			}
-
 		});
 	} else {
 		res.render('login', { errormessage: 'Please enter Username and Password!' })
@@ -367,7 +378,7 @@ app.post('/auth', (req, res) => {
 
 // admin page: insert new user to table
 app.post('/admin', (req, res) => {
-
+	// Author : Jordan
 	var userID = parseInt(req.body.userID.trim());
 	var firstname = req.body.firstname.trim();
 	var surname = req.body.surname.trim();
@@ -393,7 +404,7 @@ app.post('/admin', (req, res) => {
 	}
 
 	// create unique username
-	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
+	var username = firstname.substring(0, 1).toLowerCase() + surname.substring(0, 4).toLowerCase() + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
 	var password = generatePassword();
 
 	// sql queries
@@ -402,20 +413,16 @@ app.post('/admin', (req, res) => {
 
 	// check fields are not empty
 	if (firstname && surname) {
-		connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
+		connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function (err_userAuth, userAuth_results, userAuth_fields) {
 			if (err_userAuth) throw err_userAuth;
 			connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function (err_users, users_results, fields_users) {
 				if (err_users) throw err_users;
 				// res.render('admin', { userName: username, userData: users_results});
 				// back to admin page ??
 				console.log("successfully added");
-
 			});
 		});
-
-
 	}
-
 });
 
 app.listen(5020);

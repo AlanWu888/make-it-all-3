@@ -73,9 +73,6 @@
 					$('#myTable').append(newRow);
 				})
 			}
-			
-			
-			
 		</script>
 		<!-- Nav Bar -->
 		<nav class="navbar navbar-expand-lg navbar-light navbar-custom">
@@ -154,120 +151,35 @@
 				</table>
 			</div>
 			
-			<!-- Modal For Alice Info -->
+			<!-- Manage user modal -->
 			<% if(userData.length!=0){ var i=0; userData.forEach(function(data){ %>
-			<div class="modal fade problemInfo" id="modal<%= i.toString() %>" tabindex="-1" role="dialog"
-					aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">User <%=data.employee_id%> - <%=data.firstname%></h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<ul>
-								<li><b>User ID: </b><%=data.employee_id%></li>
-								<li><b>User Name: </b><%=data.firstname%></li>
-								<li><b>User Type:</b><%=data.surname%></li>
-								<li><b>Speciality:</b><%=data.speciality%></li>
-								<li><b>Contract Type:</b><%=data.contract_type%></li>
-								<li><b>Start Type:</b><%=data.start_date%></li>
-							</ul>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">Edit User</button>
-							<button type="button" class="btn btn-primary">Remove User</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<% i++; })} %>
-			
-			<!-- Modal For Clara Info -->
-			<div class="modal fade problemInfo" id="ClaraModal" tabindex="-1" role="dialog" aria-labelledby="ClaraModal" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">User 2 - Clara</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<ul>
-								<li><b>User ID:</b> 2</li>
-								<li><b>User Name:</b> Clara</li>
-								<li><b>User Type:</b> Specialist</li>
-								<li><b>Speciality:</b> Software</li>
-								<li><b>Contract Type:</b> Permanent</li>
-								<li><b>Start Type:</b> 01/01/1970</li>
-							</ul>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">Edit User</button>
-							<button type="button" class="btn btn-primary">Remove User</button>
+				<div class="modal fade problemInfo" id="modal<%= i.toString() %>" tabindex="-1" role="dialog"
+						aria-labelledby="modal<%= i.toString() %>Label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle">User <%=data.employee_ID%> - <%=data.firstname%></h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<ul>
+									<li><b>User ID: </b><%=data.employee_ID%></li>
+									<li><b>User Name: </b><%=data.firstname%></li>
+									<li><b>User Type:</b><%=data.userType%></li>
+									<li><b>Speciality:</b><%=data.speciality%></li>
+									<li><b>Contract Type:</b><%=data.contract_type%></li>
+									<li><b>Start Type:</b><%=data.start_date%></li>
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<a href="auth/delete/<%= data.employee_ID %>"><button type="button" class="btn btn-primary">Remove User</button></a>							
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			
-			<!-- Modal For Bert Info -->
-			<div class="modal fade problemInfo" id="BertModal" tabindex="-1" role="dialog" aria-labelledby="BertModal" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">User 3 - Bert</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<ul>
-								<li><b>User ID:</b> 3</li>
-								<li><b>User Name:</b> Bert</li>
-								<li><b>User Type:</b> Specialist</li>
-								<li><b>Speciality:</b> Hardware</li>
-								<li><b>Contract Type:</b> Permanent</li>
-								<li><b>Start Type:</b> 01/01/1970</li>
-							</ul>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">Edit User</button>
-							<button type="button" class="btn btn-primary">Remove User</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Modal For Nick Info -->
-			<div class="modal fade problemInfo" id="NickModal" tabindex="-1" role="dialog" aria-labelledby="NickModal" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLongTitle">User 4 - Nick</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<ul>
-								<li><b>User ID:</b> 4</li>
-								<li><b>User Name:</b> Nick</li>
-								<li><b>User Type:</b> Specialist</li>
-								<li><b>Speciality:</b> Network</li>
-								<li><b>Contract Type:</b> Permanent</li>
-								<li><b>Start Type:</b> 01/01/1970</li>
-							</ul>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">Edit User</button>
-							<button type="button" class="btn btn-primary">Remove User</button>
-						</div>
-					</div>
-				</div>
-			</div>
+				<% i++; })} %>
 			
 			<!-- Modal for Adding a new user -->
 			<div class="modal fade" id="addnewuser" tabindex="-1" role="dialog" aria-labelledby="lbl_newUserModal"
@@ -293,7 +205,10 @@
 														<div class="input-group-prepend">
 															<span class="input-group-text" id="basic-addon1">User ID</span>
 														</div>
-														<input name="userID" value="<%=parseInt(userData[userData.length - 1].employeeID)+1 %>" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" >
+														<% if(userData.length!=0){ var nextUserID=1; userData.forEach(function(data){ %>
+															<% nextUserID++; })} %>
+														<% // console.log("TAG " + nextUserID) %> 
+														<input readonly name="userID" value="<%=nextUserID%>" type="text" class="form-control" id="userID-number" aria-label="Username" aria-describedby="basic-addon1" >
 													</div>
 												</div>
 											</div>
