@@ -181,18 +181,17 @@
 							</div>
 							<!-- card footer -->
 							<div class="card-footer text-muted">
-								<div class="btn dropup">
-									<!-- Additional actions -->
-									<a class="btn btn-dropup dropdown-toggle" href="#" role="button"
-										id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-										aria-expanded="false">
-										Actions
-									</a>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-										<a class="dropdown-item" href="#">Solution offered works</a>
-										<a class="dropdown-item" href="#">Solution did not work</a>
+								<!-- Additional actions -->
+								<form action="/solutionOutcome" method="post">
+									<div class="row col d-none">
+										<input readonly name="user_session_id" type="text" class="form-control" value="<%= curr_user %>"/>
 									</div>
-								</div>
+									<select class="form-control" name="selectAcion" onchange="this.form.submit()">
+										<option value='0|<%= data.case_id %>'>Actions</option>
+										<option value='1|<%= data.case_id %>'>Solution Worked</option>
+										<option value='2|<%= data.case_id %>'>Solution Failed</option>
+									</select>
+								</form>
 								<button type="button" class="btn" data-toggle="modal"
 									data-target="#modal<%= i.toString() %>">
 									Expand
@@ -220,6 +219,7 @@
 							<% } %>
 			</div>
 		</div>
+
 		<!-- New Problem Modal -->
 		<div class="modal fade" id="newProblemModal" tabindex="-1" role="dialog" aria-labelledby="lbl_newProblemModal"
 			aria-hidden="true">
@@ -388,6 +388,7 @@
 				</div>
 			</div>
 			<% i++; })} %>
+
 	</div> <!-- container modal -->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
