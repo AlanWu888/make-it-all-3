@@ -19,6 +19,24 @@ function getDate() {
 	return today;
 }
 
+function generatePassword() {
+
+	// generate random 8 character password:
+
+	var pass = '';
+	var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
+			'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+	  
+	for (let i = 1; i <= 8; i++) {
+		var char = Math.floor(Math.random()
+					* str.length + 1);
+		  
+		pass += str.charAt(char)
+	}
+	  
+	return pass;
+}
+
 app.set('view engine', 'ejs')   // set view engine
 
 app.use(session({
@@ -267,14 +285,15 @@ app.post('/admin', (req, res) => {
 
 	// create unique username
 	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
+	var password = generatePassword();
 
 	// sql queries
+	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, ?, ?, ?)";
 	var sqlAddtoUsers = "INSERT INTO `Users` (`employee_id`, `firstname`, `surname`, `speciality`, `contract_type`, `start_date`) VALUES (?, ?, ?, ?, ?, ?)";
-	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, 'test123', ?, ?)";
 
 	// check fields are not empty
 	if (firstname && surname) {
-		connection.query(sqlAddtoUserAuth, [userID, username, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
+		connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
 			if (err_userAuth) throw err_userAuth;
 			connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function(err_users, users_results, fields_users) {
 				if (err_users) throw err_users;
