@@ -19,9 +19,6 @@ function getDate() {
 	return today;
 }
 
-<<<<<<< HEAD
-////////////////////////////////////////////////////////////////////////
-=======
 function generatePassword() {
 
 	// generate random 8 character password:
@@ -39,7 +36,6 @@ function generatePassword() {
 	  
 	return pass;
 }
->>>>>>> 8d5773c78d317177cd76160fb594d7914fc7c9a1
 
 app.set('view engine', 'ejs')   // set view engine
 
