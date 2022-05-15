@@ -84,7 +84,7 @@ app.post('/solutionOutcome', (req, res) => {
 	var action = values.substring(0,1);
 	var case_id =  values.substr(-(values.length-2));
 
-	console.log(req.body.user_session_id);
+	// console.log(req.body.user_session_id);
 
 	var sql_status_assign = "UPDATE Cases " +
 							"SET status_code = 'Assigned' "+
@@ -108,8 +108,8 @@ app.post('/solutionOutcome', (req, res) => {
 	// get username
 	connection.query('SELECT username FROM `userAuth` WHERE userID = ?', [user_id], function (error, user_results, fields) {
 		if (error) throw error;
-		console.log(user_results)
-		// username = user_results[0].username
+		// console.log(user_results)
+		username = user_results[0].username
 		// console.log("current user is: " + username)
 	})
 
@@ -393,12 +393,8 @@ app.post('/admin', (req, res) => {
 	}
 
 	// create unique username
-<<<<<<< HEAD
-	var username = firstname.substring(0, 1).toLowerCase() + surname.substring(0, 4).toLowerCase() + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
-=======
 	var username = firstname.substring(0,1).toLowerCase() + surname.substring(0,4).toLowerCase() + Math.floor(Math.random()*(999-100+1)+100).toString();
 	var password = generatePassword();
->>>>>>> 8d5773c78d317177cd76160fb594d7914fc7c9a1
 
 	// sql queries
 	var sqlAddtoUserAuth = "INSERT INTO `userAuth` (`userID`, `username`, `password`, `userType`, `employeeID`) VALUES (?, ?, ?, ?, ?)";
@@ -406,11 +402,7 @@ app.post('/admin', (req, res) => {
 
 	// check fields are not empty
 	if (firstname && surname) {
-<<<<<<< HEAD
-		connection.query(sqlAddtoUserAuth, [userID, username, userType, userID], function (err_userAuth, userAuth_results, userAuth_fields) {
-=======
 		connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function(err_userAuth, userAuth_results, userAuth_fields) {
->>>>>>> 8d5773c78d317177cd76160fb594d7914fc7c9a1
 			if (err_userAuth) throw err_userAuth;
 			connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function (err_users, users_results, fields_users) {
 				if (err_users) throw err_users;
