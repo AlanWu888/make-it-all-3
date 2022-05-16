@@ -382,26 +382,10 @@ app.post('/admin', (req, res) => {
 	var userID = parseInt(req.body.userID.trim());
 	var firstname = req.body.firstname.trim();
 	var surname = req.body.surname.trim();
-	var userType;
+	var userType = req.body.userType;
 	var speciality = req.body.speciality;
-	var contractType;
+	var contractType = req.body.contractType;
 	var date = getDate();
-
-	switch (parseInt(req.body.userType)) {
-		case 0:
-			userType = 'admin';
-		case 1:
-			userType = 'employee';
-		case 2:
-			userType = 'specialist';
-	}
-
-	switch (parseInt(req.body.contractType)) {
-		case 0:
-			contractType = 'Permanent';
-		case 1:
-			contractType = 'Temporary';
-	}
 
 	// create unique username
 	var username = firstname.substring(0, 1).toLowerCase() + surname.substring(0, 4).toLowerCase() + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
