@@ -58,24 +58,20 @@ app.get('/auth/delete/:employee_ID', function (req, res, next) {
 
 	var deleteUser = `DELETE FROM Users WHERE employee_id = "${id}"`
 	var deleteAuth = `DELETE FROM userAuth WHERE employeeID = "${id}"`
-	var sql_users = "SELECT userAuth.employeeID as employee_ID, Users.firstname, userAuth.userType as userType, Users.speciality, Users.contract_type, Users.start_date FROM `Users` INNER JOIN userAuth ON Users.employee_id = userAuth.employeeID"
-
+	var sql_users = "SELECT userAuth.employeeID as employee_ID, Users.firstname, userAuth.userType as userType, Users.speciality, Users.contract_type, Users.start_date " + 
+					"FROM `Users` " + 
+					"INNER JOIN userAuth " + 
+					"ON Users.employee_id = userAuth.employeeID"
+					
 	connection.query(deleteUser, function (err_userDelete, userDelete_results, userDelete_fields) {
-		if (err_userDelete) {
-			throw err_userDelete;
-		}
+		if (err_userDelete) throw err_userDelete;
 		connection.query(deleteAuth, function (err_userAuthDelete, userAuthDelete_results, userAuthDelete_fields) {
-			if (err_userAuthDelete) {
-				throw err_userAuthDelete;
-			} else {
-				//connection.query(sql_users, function (err_users, users_data, fields_users) {
-				//		if (err_users) throw err_users
-				//		console.log(users_data)
-				//		res.render('admin', { userData: users_data})
-				//});		
-				//res.render('login', { errormessage: 'Please enter Username and Password!' })
-				res.redirect("/login")
-			}
+			if (err_userAuthDelete) throw err_userAuthDelete;
+
+			connection.query(sql_users, function (err_users, users_data, fields_users) {
+				if (err_users) throw err_users
+				res.render('admin', {userData: users_data })
+			});
 		})
 	})
 });
@@ -284,7 +280,7 @@ app.post('/auth', (req, res) => {
 					connection.query(sql_users, function (err_users, users_data, fields_users) {
 						if (err_users) throw err_users
 						// console.log(users_data)
-						res.render('admin', { userName: username, userData: users_data })
+						res.render('admin', {userData: users_data })
 					});
 				}
 				
@@ -378,7 +374,7 @@ app.post('/auth', (req, res) => {
 
 // admin page: insert new user to table
 app.post('/admin', (req, res) => {
-	// Author : Jordan
+	// Author : Jordan, editted by Alan
 	var userID = parseInt(req.body.userID.trim());
 	var firstname = req.body.firstname.trim();
 	var surname = req.body.surname.trim();
@@ -396,17 +392,20 @@ app.post('/admin', (req, res) => {
 	var sqlAddtoUsers = "INSERT INTO `Users` (`employee_id`, `firstname`, `surname`, `speciality`, `contract_type`, `start_date`) VALUES (?, ?, ?, ?, ?, ?)";
 
 	// check fields are not empty
-	if (firstname && surname) {
-		connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function (err_userAuth, userAuth_results, userAuth_fields) {
-			if (err_userAuth) throw err_userAuth;
-			connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function (err_users, users_results, fields_users) {
-				if (err_users) throw err_users;
-				// res.render('admin', { userName: username, userData: users_results});
-				// back to admin page ??
-				console.log("successfully added");
+	connection.query(sqlAddtoUserAuth, [userID, username, password, userType, userID], function (err_userAuth, userAuth_results, userAuth_fields) {
+		if (err_userAuth) throw err_userAuth;
+		connection.query(sqlAddtoUsers, [userID, firstname, surname, speciality, contractType, date], function (err_users, users_results, fields_users) {
+			if (err_users) throw err_users;
+			var sql_users = "SELECT userAuth.employeeID as employee_ID, Users.firstname, userAuth.userType as userType, Users.speciality, Users.contract_type, Users.start_date " + 
+							"FROM `Users` " + 
+							"INNER JOIN userAuth " + 
+							"ON Users.employee_id = userAuth.employeeID"
+			connection.query(sql_users, function (err_users, users_data, fields_users) {
+				if (err_users) throw err_users
+				res.render('admin', {userData: users_data })
 			});
 		});
-	}
+	});
 });
 
 app.listen(5020);
